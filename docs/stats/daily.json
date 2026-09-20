@@ -1,0 +1,23 @@
+{
+ "updated": "2026-09-20T14:47:19.233Z",
+ "days": [
+  {
+   "date": "2026-09-20",
+   "latest": "v0.8.4",
+   "checks_mac": null,
+   "checks_win": null,
+   "dl_mac_arm64": null,
+   "dl_mac_x64": null,
+   "dl_win_x64": null,
+   "dl_win_arm64": null,
+   "totals": {
+    "checks_mac": 3,
+    "checks_win": 1,
+    "dl_mac_arm64": 5,
+    "dl_mac_x64": 0,
+    "dl_win_x64": 0,
+    "dl_win_arm64": 0
+   }
+  }
+ ]
+}
