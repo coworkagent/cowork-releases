@@ -54,7 +54,7 @@
   .btn:focus-visible, .lang:focus-visible, .seg button:focus-visible, a:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
   .btn-primary{background:var(--accent); color:#fff}
   .btn-primary:hover{background:var(--accent-ink)}
-  .btn-ghost{background:var(--surface); color:var(--ink); border-color:var(--line)}
+  .btn-ghost{background:var(--surface); color:var(--ink); border-color:#d3dae2; box-shadow:0 1px 2px rgba(22,26,31,.05)}
   .btn-ghost:hover{border-color:var(--ink-3)}
   .btn-xl{padding:16px 30px; font-size:16.5px; box-shadow:0 14px 30px -14px rgba(43,124,184,.55)}
   .btn svg{width:18px; height:18px; flex:none}
@@ -152,6 +152,16 @@
     .skeleton{animation:none}
     .btn,.platform{transition:none}
   }
+  /*
+   * Chinese typesetting. The heading metrics above are tuned for Latin: negative tracking and a
+   * 1.08 line height pull square CJK glyphs into each other. Chinese gets neutral tracking,
+   * taller lines, and a lighter hand on the uppercase-style kicker.
+   */
+  html[lang^="zh"] h1, html[lang^="zh"] h2, html[lang^="zh"] h3, html[lang^="zh"] h4{letter-spacing:.015em; line-height:1.32}
+  html[lang^="zh"] .hero h1{line-height:1.26}
+  html[lang^="zh"] .kicker{letter-spacing:.08em}
+  html[lang^="zh"] .lede{line-height:1.85}
+  html[lang^="zh"] body{line-height:1.75}
 </style>
 </head>
 <body>
