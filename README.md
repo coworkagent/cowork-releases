@@ -2,7 +2,7 @@
 
 An AI agent for your desktop that does the work: it edits files, runs commands, drives a browser and your other apps, and reads and writes real Office documents. Everything runs on your own machine, and every risky action waits for your approval.
 
-This repository hosts the installers and the update feed. **[Download the latest release](https://github.com/coworkagent/cowork-releases/releases/latest).**
+This repository hosts the installers, the update feed, and the [website](https://coworkagent.github.io/cowork-releases/) (in `docs/`). **[Download the latest release](https://github.com/coworkagent/cowork-releases/releases/latest).**
 
 ## Which file do I need?
 

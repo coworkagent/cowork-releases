@@ -1,0 +1,3 @@
+# single-file preview of the landing page, rebuilt with: node docs/build-preview.mjs
+docs/cowork-landing-preview.html
+.DS_Store

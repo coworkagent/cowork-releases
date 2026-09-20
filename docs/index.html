@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>cowork: an AI agent that does the work</title>
+<meta name="description" content="A local-first desktop AI agent. It edits files, runs commands, drives your browser and other apps, and writes documents, on your own machine, with every risky action behind your approval." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%232b7cb8'/%3E%3Cpath d='M74 40 A28 28 0 1 0 74 88' fill='none' stroke='%23fff' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M62 56 L70 88 L84 64 L98 88 L106 56' fill='none' stroke='%230b2a3f' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+<style>
+  @font-face { font-family:'Sora'; src:url('fonts/sora-latin.woff2') format('woff2'); font-weight:100 800; font-display:swap; }
+  @font-face { font-family:'Geist'; src:url('fonts/geist-variable.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+  @font-face { font-family:'Geist Mono'; src:url('fonts/geist-mono-variable.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+
+  :root{
+    --bg:#fbfbfc; --bg-soft:#f3f5f7; --surface:#ffffff;
+    --ink:#161a1f; --ink-2:#4b5662; --ink-3:#7f8a98;
+    --line:#e6e9ee; --line-2:#eef1f4;
+    --accent:#2b7cb8; --accent-ink:#1f5c88; --accent-soft:#eaf2f9; --accent-line:#c7ddef;
+    --radius:14px; --radius-pill:999px;
+    --shadow-sm:0 1px 2px rgba(22,26,31,.05), 0 1px 1px rgba(22,26,31,.04);
+    --shadow:0 24px 60px -28px rgba(22,40,63,.26), 0 8px 24px -16px rgba(22,26,31,.12);
+    --shadow-lift:0 44px 90px -40px rgba(22,40,63,.34), 0 12px 30px -18px rgba(22,26,31,.14);
+    --maxw:1180px;
+    --sans:'Geist',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --display:'Sora',var(--sans);
+    --mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; overflow-x:hidden; overflow-x:clip}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; overflow-x:clip}
+  a{color:inherit; text-decoration:none}
+  h1,h2,h3,h4{font-family:var(--display); font-weight:600; letter-spacing:-.02em; line-height:1.08; margin:0}
+  p{margin:0}
+  img{display:block; max-width:100%; height:auto}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  .kicker{font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink); font-weight:500}
+  .lede{color:var(--ink-2); font-size:18.5px; line-height:1.65; max-width:58ch}
+  .h2{font-size:clamp(28px,3.6vw,42px)}
+  .h3{font-size:clamp(24px,2.8vw,32px)}
+
+  /* nav */
+  header{position:sticky; top:0; z-index:50; background:rgba(251,251,252,.84); backdrop-filter:saturate(180%) blur(14px); border-bottom:1px solid transparent; transition:border-color .3s}
+  header.stuck{border-color:var(--line)}
+  .nav{display:flex; align-items:center; gap:24px; height:64px}
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--display); font-weight:600; font-size:19px}
+  .brand svg{width:26px; height:26px; border-radius:7px; display:block}
+  .nav-links{display:flex; align-items:center; gap:26px; margin-left:auto}
+  .nav-links a{color:var(--ink-2); font-size:14.5px; transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-weight:500; font-size:14.5px; border-radius:var(--radius-pill); padding:9px 18px; border:1px solid transparent; cursor:pointer; transition:transform .12s ease, background .2s, border-color .2s; white-space:nowrap}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-primary:hover{background:var(--accent-ink)}
+  .btn-ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--ink-3); background:var(--surface)}
+  .btn-lg{padding:13px 24px; font-size:15.5px}
+  .lang{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); border:1px solid var(--line); background:var(--surface); border-radius:var(--radius-pill); padding:6px 12px; cursor:pointer; transition:border-color .2s, color .2s}
+  .lang:hover{border-color:var(--ink-3); color:var(--ink)}
+  .nav-cta{display:flex; align-items:center; gap:12px}
+
+  /* hero: copy left, product window bleeding off the right edge */
+  .hero{position:relative; padding:72px 0 40px; overflow:hidden}
+  .hero-grid{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:48px; align-items:center}
+  .hero h1{font-size:clamp(36px,4.3vw,54px); margin-top:18px}
+  .hero h1 em{font-style:normal; color:var(--accent)}
+  .hero .lede{margin-top:20px; font-size:19px}
+  .hero-actions{display:flex; flex-wrap:wrap; gap:14px; margin-top:30px}
+  .hero-note{margin-top:16px; font-size:13.5px; color:var(--ink-3); max-width:44ch}
+  .hero-media{position:relative; min-width:0}
+  .hero-media .shot{width:118%; max-width:none; box-shadow:var(--shadow-lift)}
+  .hero-glow{position:absolute; inset:-20% 0 auto auto; width:50%; height:130%; background:radial-gradient(55% 50% at 60% 30%, rgba(43,124,184,.13), transparent 70%); filter:blur(24px); pointer-events:none; z-index:0}
+  .hero .wrap{position:relative; z-index:1}
+
+  .shot{border-radius:var(--radius); background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); overflow:hidden}
+  .shot img{width:100%}
+
+  section{position:relative}
+  .band{padding:96px 0}
+  .band-soft{background:var(--bg-soft); border-top:1px solid var(--line-2); border-bottom:1px solid var(--line-2)}
+
+  /* statement: one focused message, stacked */
+  .statement{max-width:62ch}
+  .statement h2{font-size:clamp(26px,3.4vw,40px); line-height:1.15}
+  .statement p{margin-top:18px}
+  .duo{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-top:56px}
+  .duo-card{display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:30px}
+  .duo-card .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+  .duo-card h3{margin:10px 0 0; font-family:var(--display); font-weight:600; font-size:22px; line-height:1.25}
+  .duo-card p{margin-top:12px; color:var(--ink-2); font-size:15.5px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:22px}
+  .chip{font-family:var(--mono); font-size:12.5px; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink-2); background:var(--bg)}
+  @media (max-width:820px){ .duo{grid-template-columns:1fr} }
+
+  /* approve band: copy + the real card image as a wide strip */
+  .approve{display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:48px; align-items:center}
+  .approve p{margin-top:14px; color:var(--ink-2); font-size:17px; max-width:44ch}
+  .tiers{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px}
+  .tier{font-family:var(--mono); font-size:12.5px; padding:7px 13px; border-radius:var(--radius-pill); border:1px solid var(--accent-line); background:var(--accent-soft); color:var(--accent-ink)}
+  .tier.deny{border-color:var(--line); background:var(--surface); color:var(--ink-3)}
+  .approve .shot{box-shadow:var(--shadow-sm)}
+
+  /* feature split */
+  .feat{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:64px; align-items:center}
+  .feat + .feat{margin-top:104px}
+  .feat.rev .feat-media{order:-1}
+  .feat.wide{grid-template-columns:minmax(0,1fr); gap:40px}
+  .feat-head{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:64px; align-items:end}
+  .feat-head .mini{margin-top:0}
+  @media (max-width:820px){ .feat-head{grid-template-columns:1fr; gap:24px} }
+  .feat p{margin-top:16px; color:var(--ink-2); font-size:17px; max-width:46ch}
+  .mini{list-style:none; padding:0; margin:22px 0 0; display:grid; gap:11px}
+  .mini li{display:flex; gap:11px; align-items:flex-start; font-size:15px; color:var(--ink-2)}
+  .mini svg{flex:none; width:19px; height:19px; color:var(--accent); margin-top:1px}
+
+  /* computer control: wide strip */
+  .cinema-head{max-width:60ch}
+  .cinema-head p{margin-top:16px; color:var(--ink-2); font-size:17.5px}
+  .cinema .shot{margin-top:40px; box-shadow:var(--shadow)}
+  .cinema-notes{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; margin-top:36px}
+  .cinema-notes h4{font-size:16px; font-family:var(--display); font-weight:600; margin-bottom:6px}
+  .cinema-notes p{color:var(--ink-2); font-size:14.5px}
+
+  /* gallery: horizontal scroll-snap of finished sessions */
+  .gallery{margin-top:40px; display:grid; grid-auto-flow:column; grid-auto-columns:calc(50% - 10px); gap:20px; overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding-left:0; padding:4px 0 20px; scrollbar-width:thin}
+  .gallery figure{margin:0; scroll-snap-align:start; min-width:0}
+  .gallery .shot{transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s}
+  .gallery figure:hover .shot{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
+  .gallery figcaption{margin-top:12px; font-size:14.5px; color:var(--ink-2)}
+  .gallery figcaption b{display:block; color:var(--ink); font-weight:600; margin-bottom:2px}
+
+  /* bento with real images in two cells */
+  .bento{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); grid-auto-rows:minmax(150px,auto); gap:18px; margin-top:44px}
+  .cell{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:26px; transition:border-color .25s, transform .25s; min-width:0}
+  .cell:hover{border-color:var(--accent-line); transform:translateY(-3px)}
+  .cell h4{margin:0 0 8px; font-size:17px; font-family:var(--display); font-weight:600}
+  .cell p{color:var(--ink-2); font-size:14.5px}
+  .cell.img{padding:0; overflow:hidden; position:relative}
+  .cell.img img{width:100%; height:100%; object-fit:cover; object-position:top}
+  .cell.img .cap{position:absolute; left:0; right:0; bottom:0; padding:14px 18px; background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.96) 45%)}
+  .cell.img.dark .cap{background:linear-gradient(180deg,rgba(16,19,23,0),rgba(16,19,23,.94) 45%); color:#e8ecf1}
+  .cell.img.dark .cap p{color:#9aa6b3}
+  .cell.code{background:#12181e; border-color:#12181e; color:#e8ecf1}
+  .cell.code h4{color:#fff} .cell.code p{color:#9aa6b3}
+  .cell.code pre{font-family:var(--mono); font-size:12.5px; color:#7fc2ef; margin:14px 0 0; line-height:1.85; white-space:pre; overflow-x:auto}
+  .cell.code pre b{color:#c6d3df; font-weight:400}
+  .c-a{grid-column:span 2; grid-row:span 2} .c-b{grid-column:span 2} .c-c{grid-column:span 2; grid-row:span 2} .c-d{grid-column:span 2} .c-e{grid-column:span 3} .c-f{grid-column:span 3}
+  .cell.img.c-f{height:300px}
+
+  /* model access */
+  .model-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:56px; align-items:center}
+  .proto{border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--surface)}
+  .proto-row{display:grid; grid-template-columns:auto minmax(0,1fr); gap:18px; padding:20px 22px; align-items:baseline}
+  .proto-row + .proto-row{border-top:1px solid var(--line-2)}
+  .proto-row .name{font-family:var(--mono); font-size:14px; color:var(--accent-ink); font-weight:500}
+  .proto-row .desc{color:var(--ink-2); font-size:14.5px}
+  .fields{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px}
+  .field{font-family:var(--mono); font-size:12.5px; padding:6px 12px; border-radius:var(--radius-pill); border:1px solid var(--line); color:var(--ink-2); background:var(--surface)}
+
+  /* cta + footer */
+  .cta{padding:112px 0; text-align:center}
+  .cta h2{font-size:clamp(30px,4vw,46px)}
+  .cta p{margin:18px auto 0; color:var(--ink-2); font-size:18px; max-width:48ch}
+  .cta-actions{display:flex; gap:14px; justify-content:center; margin-top:32px; flex-wrap:wrap}
+  .plats{display:flex; gap:18px; justify-content:center; margin-top:24px; color:var(--ink-3); font-size:13.5px; font-family:var(--mono)}
+  footer{border-top:1px solid var(--line); padding:40px 0; color:var(--ink-3); font-size:14px}
+  .foot{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+  .foot .brand{font-size:16px; color:var(--ink-2)}
+  .foot-links{display:flex; gap:22px; margin-left:auto; flex-wrap:wrap}
+  .foot-links a{color:var(--ink-2)} .foot-links a:hover{color:var(--ink)}
+
+  /* motion: reveal on scroll (in-viewport items shown at first paint), staggered siblings, pops, wipes */
+  .reveal{opacity:0; transform:translateY(28px) scale(.985); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1), clip-path 1.1s cubic-bezier(.16,1,.3,1); transition-delay:var(--d,0s)}
+  .reveal.in{opacity:1; transform:none}
+  .reveal[data-d="1"]{--d:.08s} .reveal[data-d="2"]{--d:.16s} .reveal[data-d="3"]{--d:.24s}
+  .reveal.from-right{transform:translateX(56px) scale(.97)}
+  /* stagger items animate when an ancestor .reveal turns .in, so the observer only watches the group */
+  .si{opacity:0; transform:translateY(28px) scale(.985); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); transition-delay:var(--d,0s)}
+  .si.pop{transform:scale(.6)}
+  .in .si{opacity:1; transform:none}
+  .wipe{clip-path:inset(0 100% 0 0 round var(--radius)); transition:clip-path 1.2s cubic-bezier(.16,1,.3,1) .1s}
+  .in .wipe{clip-path:inset(0 0 0 0 round var(--radius))}
+
+  /* hero headline: words rise out of a mask */
+  .hero h1 .w{display:inline-block; overflow:hidden; vertical-align:bottom; padding-bottom:.08em; margin-bottom:-.08em}
+  .hero h1 .w > span{display:inline-block; transform:translateY(110%); transition:transform .8s cubic-bezier(.16,1,.3,1); transition-delay:var(--wd,0s)}
+  .hero h1.words-in .w > span{transform:none}
+
+  /* hero aurora: two slow blobs behind the product window */
+  .hero-glow{inset:-30% -5% auto auto; width:60%; height:150%; background:radial-gradient(45% 45% at 60% 35%, rgba(43,124,184,.20), transparent 70%); animation:drift 16s ease-in-out infinite alternate}
+  .hero-glow2{position:absolute; left:-10%; bottom:-30%; width:40%; height:90%; background:radial-gradient(50% 50% at 50% 50%, rgba(43,124,184,.10), transparent 70%); filter:blur(30px); pointer-events:none; z-index:0; animation:drift 22s ease-in-out infinite alternate-reverse}
+  @keyframes drift{from{transform:translate3d(0,0,0) scale(1)} to{transform:translate3d(-6%,8%,0) scale(1.12)}}
+
+  /* pointer tilt (hero window, gallery cards) and cursor spotlight (bento cells) */
+  .tilt{transform:perspective(1400px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0); transition:transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s; will-change:transform}
+  .tilt.active{transition:transform .08s linear, box-shadow .5s}
+  .cell{position:relative; isolation:isolate}
+  .cell::before{content:''; position:absolute; inset:0; border-radius:inherit; background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%), rgba(43,124,184,.14), transparent 60%); opacity:0; transition:opacity .35s; pointer-events:none; z-index:1}
+  .cell:hover::before{opacity:1}
+  .cell.code::before{background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%), rgba(127,194,239,.16), transparent 60%)}
+  .cell > *{position:relative; z-index:2}
+  .cell.img::before{z-index:3}
+
+  /* buttons: lift with a tinted shadow */
+  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 12px 26px -12px rgba(43,124,184,.6)}
+  .btn-ghost:hover{transform:translateY(-1px)}
+  header.stuck{box-shadow:0 8px 24px -20px rgba(22,40,63,.25)}
+
+  /* scroll-linked motion: --p goes 0→1 as the element travels from the viewport bottom to its resting spot */
+  [data-scrub]{--p:0; will-change:transform, opacity}
+  .scrub-rise{transform:perspective(1200px) translateY(calc((1 - var(--p)) * 80px)) rotateX(calc((1 - var(--p)) * 12deg)) scale(calc(.9 + var(--p) * .1)); opacity:calc(.25 + var(--p) * .75); transform-origin:50% 100%}
+  .scrub-left{transform:translateX(calc((1 - var(--p)) * -56px)); opacity:calc(.15 + var(--p) * .85)}
+  .scrub-right{transform:translateX(calc((1 - var(--p)) * 56px)); opacity:calc(.15 + var(--p) * .85)}
+  .scrub-up{transform:translateY(calc((1 - var(--p)) * 40px)); opacity:calc(.15 + var(--p) * .85)}
+
+  /* reading progress */
+  .progress{position:fixed; top:0; left:0; height:3px; width:100%; transform:scaleX(var(--sp,0)); transform-origin:left; background:var(--accent); z-index:60; pointer-events:none}
+
+
+  @media (max-width:920px){
+    .hero{padding:44px 0 20px}
+    .hero-grid,.approve,.feat,.feat.rev,.model-grid{grid-template-columns:minmax(0,1fr); gap:32px}
+    .feat.rev .feat-media{order:0}
+    .hero-media .shot{width:100%}
+    .band{padding:66px 0}
+    .feat + .feat{margin-top:64px}
+    .cinema-notes{grid-template-columns:minmax(0,1fr); gap:18px}
+    .bento{grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:auto}
+    .c-a,.c-c{grid-row:auto}
+    .cell.img{min-height:220px}
+    .nav-links{display:none}
+  }
+  @media (max-width:520px){
+    .wrap{padding:0 18px}
+    .bento{grid-template-columns:minmax(0,1fr)}
+    .c-a,.c-b,.c-c,.c-d,.c-e,.c-f{grid-column:span 1}
+    .gallery{grid-auto-columns:88%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .reveal,.reveal.from-right,.si,.si.pop{opacity:1; transform:none; transition:none}
+    .wipe{clip-path:none}
+    [data-scrub]{transform:none !important; opacity:1 !important}
+    .progress{display:none}
+    .hero h1 .w > span{transform:none; transition:none}
+    .hero-glow,.hero-glow2{animation:none}
+    .tilt{transform:none !important}
+    .gallery .shot{transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"></div>
+<header id="hdr">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="cowork">
+      <svg viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#2b7cb8"/><path d="M74 40 A28 28 0 1 0 74 88" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M62 56 L70 88 L84 64 L98 88 L106 56" fill="none" stroke="#0b2a3f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      cowork
+    </a>
+    <nav class="nav-links">
+      <a href="#features" data-t="nav.features">Features</a>
+      <a href="#work" data-t="nav.work">In practice</a>
+      <a href="#model" data-t="nav.model">Model access</a>
+      <a href="https://github.com/coworkagent/cowork-releases" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="lang" id="lang" type="button">中文</button>
+      <a class="btn btn-primary" href="https://github.com/coworkagent/cowork-releases/releases/latest" target="_blank" rel="noopener" data-t="nav.download">Download</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-glow"></div><div class="hero-glow2"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker reveal" data-t="hero.kicker">Local-first desktop agent</span>
+        <h1 class="reveal" data-d="1" data-t="hero.title">An AI agent that <em>does the work</em>.</h1>
+        <p class="lede reveal" data-d="2" data-t="hero.sub">It edits files, runs commands, drives your browser and other apps, and writes documents. All on your own machine, with every risky action behind your approval.</p>
+        <div class="hero-actions reveal" data-d="3">
+          <a class="btn btn-primary btn-lg" href="https://github.com/coworkagent/cowork-releases/releases/latest" target="_blank" rel="noopener" data-t="hero.cta1">Download</a>
+          <a class="btn btn-ghost btn-lg" href="https://github.com/coworkagent/cowork-releases/releases" target="_blank" rel="noopener" data-t="hero.cta2">All releases</a>
+        </div>
+        <p class="hero-note reveal" data-d="3" data-t="hero.note">Free, for macOS and Windows. The macOS builds are signed and notarized.</p>
+      </div>
+      <div class="hero-media reveal from-right" data-d="2">
+        <div class="shot tilt" data-tilt="2.5"><img src="assets/hero.png" width="2000" height="1250" alt="cowork after adding a --json flag to a command-line tool: the conversation on the left, the review panel with the diff on the right" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="statement reveal">
+        <h2 data-t="intro.title">A coding agent's loop, out of the terminal and onto the whole machine.</h2>
+        <p class="lede" data-t="intro.body">cowork brings an agent loop onto the desktop, then hands it the rest of the machine: a browser it drives, control of your other apps, document generation, a sandbox around its commands, and memory that lasts across sessions. It speaks protocols, not vendors, so any OpenAI-compatible or Anthropic-style endpoint works.</p>
+      </div>
+      <div class="duo">
+        <div class="duo-card reveal" data-d="1">
+          <span class="eyebrow" data-t="duo.c.k">For code</span>
+          <h3 data-t="duo.c.t">Reads the repository, makes the change, runs the tests.</h3>
+          <p data-t="duo.c.b">A file tree, a built-in editor, a terminal, git, worktrees, and a diff of everything it touched. It works the way a coding agent does, with the project open beside the conversation.</p>
+          <div class="chips"><span class="chip">file tree</span><span class="chip">editor</span><span class="chip">git</span><span class="chip">worktrees</span><span class="chip">terminal</span><span class="chip">diff &amp; undo</span><span class="chip">sandbox</span></div>
+        </div>
+        <div class="duo-card reveal" data-d="2">
+          <span class="eyebrow" data-t="duo.o.k">For office work</span>
+          <h3 data-t="duo.o.t">Reads the files you already have, hands back finished ones.</h3>
+          <p data-t="duo.o.b">Reports, workbooks, and decks are read and written as real Office files, with no Office install. Older binary formats are read too, and PDFs, CSVs, and images open in the same viewer.</p>
+          <div class="chips"><span class="chip">.docx</span><span class="chip">.xlsx</span><span class="chip">.pptx</span><span class="chip">.doc</span><span class="chip">.xls</span><span class="chip">.ppt</span><span class="chip">.pdf</span><span class="chip">.csv</span><span class="chip">.md</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-soft" id="features">
+    <div class="wrap">
+      <div class="approve">
+        <div class="scrub-left" data-scrub>
+          <h2 class="h2" data-t="safe.title">It acts. You approve.</h2>
+          <p data-t="safe.body">Every write, command, and external tool call is risk-classified and gated. You decide at the moment that carries information, and what you grant stays visible and revocable.</p>
+          <div class="tiers" data-stagger="90">
+            <span class="tier si pop" data-t="safe.t1">Allow</span>
+            <span class="tier si pop" data-t="safe.t2">This session</span>
+            <span class="tier si pop" data-t="safe.t3">Always</span>
+            <span class="tier deny si pop" data-t="safe.t4">Deny</span>
+          </div>
+        </div>
+        <div class="scrub-right" data-scrub>
+          <div class="shot"><img src="assets/feat-approval.png" width="1600" height="330" alt="An approval card asking permission to operate the Dictionary app, with the agent's reason and Deny, Always, This session and Allow buttons" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <div class="feat wide" style="margin-top:110px">
+        <div class="feat-head reveal">
+          <div>
+            <h3 class="h3" data-t="ff.title">The project, open beside the conversation.</h3>
+            <p data-t="ff.body">A file tree with git status, tabs, and a full editor sit in the side panel, and the panel expands to the whole window when you want to read. A file the agent mentions is a link: click it and it opens at that line.</p>
+          </div>
+          <ul class="mini">
+            <li data-i="check"><span data-t="ff.a">File tree with search, git markers, and open-with for your own editor</span></li>
+            <li data-i="check"><span data-t="ff.b">Built-in editor with find, replace, folding, and conflict-safe saving</span></li>
+            <li data-i="check"><span data-t="ff.c">Mentions like src/cli.mjs:42 jump straight to the line</span></li>
+          </ul>
+        </div>
+        <div class="feat-media scrub-rise" data-scrub>
+          <div class="shot"><img src="assets/feat-files.png" width="2000" height="1025" alt="The side panel expanded to the full window: a project file tree with git status markers on the left and a source file open in the built-in editor on the right" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <div class="feat wide">
+        <div class="feat-head reveal">
+          <div>
+            <h3 class="h3" data-t="fd.title">Every change, reviewed before you keep it.</h3>
+            <p data-t="fd.body">Each turn ends with a receipt of what was touched. Read the diff unified or side by side, scoped to the last turn, the whole session, the working tree, or any two revisions, and take back what you do not want.</p>
+          </div>
+          <ul class="mini">
+            <li data-i="check"><span data-t="fd.a">Unified and side-by-side views with search and jump to change</span></li>
+            <li data-i="check"><span data-t="fd.b">Undo a single file or a whole turn, including files git does not track</span></li>
+            <li data-i="check"><span data-t="fd.c">Stage or restore individual hunks, then commit from the panel</span></li>
+          </ul>
+        </div>
+        <div class="feat-media scrub-rise" data-scrub>
+          <div class="shot"><img src="assets/feat-diff.png" width="2000" height="1075" alt="The review panel in side-by-side mode: three changed files with added and removed line counts, and the before and after of a command-line script with removed lines in red and added lines in green" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <div class="feat">
+        <div class="scrub-left" data-scrub>
+          <h3 class="h3" data-t="f1.title">Real documents in, real documents out.</h3>
+          <p data-t="f1.body">Hand it a spreadsheet, a report, or a deck and it edits the real file, keeping formulas, merged cells, and styles. It generates Word, Excel, and PowerPoint as Office Open XML with no Office install, then renders the first page to check its own work. The result opens in the side panel, next to the conversation that made it.</p>
+          <ul class="mini">
+            <li data-i="check"><span data-t="f1.a">Reads .docx, .xlsx, .pptx, the older .doc, .xls, .ppt, and PDF</span></li>
+            <li data-i="check"><span data-t="f1.b">Writes .docx, .xlsx, .pptx, edits existing decks, and self-checks a render</span></li>
+            <li data-i="check"><span data-t="f1.c">Previews documents, sheets, slides, PDF, CSV, Markdown, and images in place</span></li>
+          </ul>
+        </div>
+        <div class="feat-media scrub-rise" data-scrub>
+          <div class="shot"><img src="assets/feat-office.png" width="2000" height="1125" alt="A finished board pack: the rendered summary slide in the conversation, and the generated Excel workbook open in the viewer with its regional and monthly summary sheets" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <div class="feat rev">
+        <div class="scrub-right" data-scrub>
+          <h3 class="h3" data-t="f3.title">A browser it drives, side by side with the conversation.</h3>
+          <p data-t="f3.body">An embedded browser is driven through the accessibility tree by role and name, not brittle pixel coordinates. The page stays open next to the transcript, so you see what it read and what it concluded.</p>
+          <ul class="mini">
+            <li data-i="check"><span data-t="f3.a">Elements addressed by role and name</span></li>
+            <li data-i="check"><span data-t="f3.b">Tools a page declares are picked up automatically</span></li>
+            <li data-i="check"><span data-t="f3.c">The same approach reaches your other apps</span></li>
+          </ul>
+        </div>
+        <div class="feat-media scrub-rise" data-scrub>
+          <div class="shot"><img src="assets/feat-browser.png" width="2000" height="1513" alt="cowork with the embedded browser open on an MDN reference page while the conversation shows a three-point summary of it" loading="lazy" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band cinema">
+    <div class="wrap">
+      <div class="cinema-head reveal">
+        <h2 class="h2" data-t="pc.title">Your other apps, with a picture-in-picture of what it touches.</h2>
+        <p data-t="pc.body">It reads an app's accessibility tree and acts in the background where it can. A live thumbnail shows the window it is driving, with the cursor it is about to use.</p>
+      </div>
+      <div class="reveal" data-d="1"><div class="shot wipe"><img src="assets/feat-computer.png" width="2000" height="571" alt="The agent driving the macOS Dictionary app: the timeline lists each step and a picture-in-picture thumbnail shows the Dictionary window with the looked-up word" loading="lazy" /></div></div>
+      <div class="cinema-notes reveal" data-stagger="110">
+        <div class="si"><h4 data-t="pc.a.t">Per-app authorization</h4><p data-t="pc.a.b">It asks before touching an app, and the grant lasts for the session.</p></div>
+        <div class="si"><h4 data-t="pc.b.t">Background first</h4><p data-t="pc.b.b">Clicks and text go through the accessibility interface when possible, without stealing your mouse.</p></div>
+        <div class="si"><h4 data-t="pc.c.t">Honest when it cannot see</h4><p data-t="pc.c.b">When a window will not expose its elements, it says so instead of guessing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-soft" id="work">
+    <div class="wrap">
+      <span class="kicker reveal" data-t="work.kicker">In practice</span>
+      <h2 class="h2 reveal" style="margin-top:14px" data-t="work.title">Four tasks, start to finish.</h2>
+    <div class="gallery reveal" data-stagger="120">
+      <figure class="si"><div class="shot tilt" data-tilt="4"><img src="assets/task-code.png" width="1600" height="1205" alt="A finished coding task: the agent added a --json flag, wrote six tests and reports that eleven tests pass" loading="lazy" /></div><figcaption><b data-t="g1.t">Add a --json flag, with tests</b><span data-t="g1.b">Reads the code, edits three files, runs the suite, leaves a change receipt.</span></figcaption></figure>
+      <figure class="si"><div class="shot tilt" data-tilt="4"><img src="assets/task-docs.png" width="1600" height="1205" alt="A finished document task: an Excel report and a one-page summary deck, with the rendered slide shown in the conversation" loading="lazy" /></div><figcaption><b data-t="g2.t">A board pack from a CSV</b><span data-t="g2.b">An Excel workbook with summaries and a chart, plus a one-page deck, both render-checked.</span></figcaption></figure>
+      <figure class="si"><div class="shot tilt" data-tilt="4"><img src="assets/task-browser.png" width="1600" height="1205" alt="A finished browser task: a three-point summary of a web reference page" loading="lazy" /></div><figcaption><b data-t="g3.t">Read a reference page</b><span data-t="g3.b">Opens the page in the embedded browser and returns three precise points.</span></figcaption></figure>
+      <figure class="si"><div class="shot tilt" data-tilt="4"><img src="assets/task-computer.png" width="1600" height="1205" alt="A finished computer-control task: the definition looked up in the Dictionary app" loading="lazy" /></div><figcaption><b data-t="g4.t">Look a word up in Dictionary</b><span data-t="g4.b">Launches the app, types the word, reads the entry back.</span></figcaption></figure>
+    </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="statement reveal">
+        <h2 class="h2" data-t="loop.title">Built to run long tasks, not just answer.</h2>
+        <p class="lede" data-t="loop.sub">The loop is designed so a long job does not drown its own context, and so you can see what it changed.</p>
+      </div>
+      <div class="bento reveal" data-stagger="80">
+        <div class="cell img c-a si"><img src="assets/feat-review.png" width="1150" height="1800" alt="The review panel listing three changed files with a unified diff of the CLI source" loading="lazy" /><div class="cap"><h4 data-t="b1.t">Per-file review</h4><p data-t="b1.b">Diffs, a change receipt, and undo per file.</p></div></div>
+        <div class="cell c-b si"><h4 data-t="b2.t">Context that lasts</h4><p data-t="b2.b">Compaction past 80 percent of the window, pairing-safe, with originals archived. A background recap keeps a long run legible.</p></div>
+        <div class="cell code c-c si"><h4 data-t="b3.t">Code Mode</h4><p data-t="b3.b">For read-heavy work it writes a small program to orchestrate tools. Only what it prints enters the context.</p><pre><b>const</b> files = <b>await</b> glob('src/**/*.ts')
+<b>for</b> (const f <b>of</b> files) scan(f)
+print(summary)   <b>// only this returns</b></pre></div>
+        <div class="cell c-d si"><h4 data-t="b4.t">Parallel and delegated</h4><p data-t="b4.b">Independent tool calls run at once; sub-agents take isolated side quests and return only the conclusion.</p></div>
+        <div class="cell c-e si"><h4 data-t="b5.t">Project memory, skills, MCP</h4><p data-t="b5.b">It learns your conventions across sessions. Agent Skills and Model Context Protocol servers extend what it can do.</p></div>
+        <div class="cell img dark c-f si"><img src="assets/feat-dark.png" width="2000" height="1250" alt="The same document session in the dark theme" loading="lazy" /><div class="cap"><h4 data-t="b6.t">Light, dark, and three more themes</h4><p data-t="b6.b">A high-density desktop tool that follows your system.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-soft" id="model">
+    <div class="wrap model-grid">
+      <div class="reveal">
+        <span class="kicker" data-t="model.k">Model access</span>
+        <h2 class="h2" style="margin-top:14px" data-t="model.title">Not tied to any vendor.</h2>
+        <p class="lede" style="margin-top:16px" data-t="model.body">The app speaks protocols, not services. Switching backends is a change of URL, no code. Hosted service, gateway, or a local model on your own box all work the same way. There is no built-in model list on purpose, so nothing goes stale.</p>
+        <div class="fields">
+          <span class="field" data-t="model.f1">Protocol</span>
+          <span class="field" data-t="model.f2">Base URL</span>
+          <span class="field" data-t="model.f3">API key</span>
+          <span class="field" data-t="model.f4">Model name</span>
+        </div>
+      </div>
+      <div class="proto scrub-rise" data-scrub>
+        <div class="proto-row"><span class="name">Chat Completions</span><span class="desc" data-t="model.p1">Widest coverage. Most hosted services, gateways, and local servers such as llama.cpp, vLLM, Ollama, and LM Studio expose a compatible endpoint.</span></div>
+        <div class="proto-row"><span class="name">Messages</span><span class="desc" data-t="model.p2">A content-block protocol that expresses tool calls more directly.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap reveal">
+      <h2 data-t="cta.title">Give the agent the whole machine.</h2>
+      <p data-t="cta.sub">Free. Bring your own model. Every consequential action stays behind your approval.</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary btn-lg" href="https://github.com/coworkagent/cowork-releases/releases/latest" target="_blank" rel="noopener" data-t="cta.dl">Download</a>
+        <a class="btn btn-ghost btn-lg" href="https://github.com/coworkagent/cowork-releases/releases" target="_blank" rel="noopener" data-t="cta.src">All releases</a>
+      </div>
+      <div class="plats"><span>macOS</span><span>Windows</span><span>Linux</span></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="brand"><svg viewBox="0 0 128 128" width="20" height="20" aria-hidden="true" style="border-radius:6px"><rect width="128" height="128" rx="28" fill="#2b7cb8"/><path d="M74 40 A28 28 0 1 0 74 88" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M62 56 L70 88 L84 64 L98 88 L106 56" fill="none" stroke="#0b2a3f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>cowork</span>
+    <span data-t="foot.tag" style="color:var(--ink-3)">A local-first desktop AI agent.</span>
+    <div class="foot-links">
+      <a href="https://github.com/coworkagent/cowork-releases" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/coworkagent/cowork-releases/releases/latest" target="_blank" rel="noopener" data-t="foot.dl">Download</a>
+      <a href="https://github.com/coworkagent/cowork-releases#readme" target="_blank" rel="noopener" data-t="foot.docs">Docs</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var CHECK = '<svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"><path d="M40 128l56 56 120-120"/></svg>';
+  document.querySelectorAll('[data-i="check"]').forEach(function(el){ el.insertAdjacentHTML('afterbegin', CHECK); });
+
+  var T = {
+    'nav.features':['Features','功能'],'nav.work':['In practice','实战'],'nav.model':['Model access','模型接入'],'nav.download':['Download','下载'],
+    'hero.kicker':['Local-first desktop agent','本地优先的桌面代理'],
+    'hero.title':['An AI agent that <em>does the work</em>.','会动手的<br><em>桌面 AI 代理</em>。'],
+    'hero.sub':['It edits files, runs commands, drives your browser and other apps, and writes documents. All on your own machine, with every risky action behind your approval.','读写文件、执行命令、驱动浏览器和其他应用、产出文档。全部在你自己的机器上，每一步有风险的操作都要经过你批准。'],
+    'hero.cta1':['Download','下载'],'hero.cta2':['All releases','全部版本'],
+    'hero.note':['Free, for macOS and Windows. The macOS builds are signed and notarized.','免费，支持 macOS 与 Windows。macOS 版本已签名并公证。'],
+    'intro.title':["A coding agent's loop, out of the terminal and onto the whole machine.",'把编码代理的循环搬出终端，交给整台电脑。'],
+    'intro.body':['cowork brings an agent loop onto the desktop, then hands it the rest of the machine: a browser it drives, control of your other apps, document generation, a sandbox around its commands, and memory that lasts across sessions. It speaks protocols, not vendors, so any OpenAI-compatible or Anthropic-style endpoint works.','cowork 把代理循环带到桌面，再把整台机器交给它：一个它能驱动的浏览器、对其他应用的控制、文档生成、命令沙箱，以及跨会话的长期记忆。它讲的是协议而非厂商，任何 OpenAI 兼容或 Anthropic 风格的接口都能接。'],
+    'safe.title':['It acts. You approve.','它动手，你批准。'],
+    'safe.body':['Every write, command, and external tool call is risk-classified and gated. You decide at the moment that carries information, and what you grant stays visible and revocable.','每一次写入、命令和外部工具调用都按风险分级并拦下等你放行。你在真正有信息量的那一刻决定，授予的权限始终可见、可撤销。'],
+    'safe.t1':['Allow','允许'],'safe.t2':['This session','本次会话'],'safe.t3':['Always','始终'],'safe.t4':['Deny','拒绝'],
+    'duo.c.k':['For code','写代码'],'duo.c.t':['Reads the repository, makes the change, runs the tests.','读懂仓库，动手修改，跑完测试。'],
+    'duo.c.b':['A file tree, a built-in editor, a terminal, git, worktrees, and a diff of everything it touched. It works the way a coding agent does, with the project open beside the conversation.','文件树、内置编辑器、终端、git、worktree，加上它改过的每一处 diff。像编码 Agent 一样工作，项目就开在对话旁边。'],
+    'duo.o.k':['For office work','做办公'],'duo.o.t':['Reads the files you already have, hands back finished ones.','读你手上已有的文件，交回做好的成品。'],
+    'duo.o.b':['Reports, workbooks, and decks are read and written as real Office files, with no Office install. Older binary formats are read too, and PDFs, CSVs, and images open in the same viewer.','报告、表格、演示文稿都按真正的 Office 文件读写，不需要安装 Office。旧版二进制格式也能读，PDF、CSV、图片在同一个查看器里打开。'],
+    'ff.title':['The project, open beside the conversation.','项目，就开在对话旁边。'],
+    'ff.body':['A file tree with git status, tabs, and a full editor sit in the side panel, and the panel expands to the whole window when you want to read. A file the agent mentions is a link: click it and it opens at that line.','带 git 状态的文件树、标签页和完整的编辑器都在侧边面板里，想专心看的时候面板可以放大到整个窗口。Agent 提到的文件就是链接：点一下，直接打开并跳到那一行。'],
+    'ff.a':['File tree with search, git markers, and open-with for your own editor','文件树：搜索、git 标记，也能用你自己的编辑器打开'],
+    'ff.b':['Built-in editor with find, replace, folding, and conflict-safe saving','内置编辑器：查找、替换、折叠，保存时防冲突'],
+    'ff.c':['Mentions like src/cli.mjs:42 jump straight to the line','像 src/cli.mjs:42 这样的引用，点击直达对应行'],
+    'fd.title':['Every change, reviewed before you keep it.','每一处改动，先审阅再保留。'],
+    'fd.body':['Each turn ends with a receipt of what was touched. Read the diff unified or side by side, scoped to the last turn, the whole session, the working tree, or any two revisions, and take back what you do not want.','每一轮结束都有一份改动回执。diff 可以统一视图或左右对照，范围可选上一轮、整个会话、工作区，或任意两个版本；不想要的随时撤回。'],
+    'fd.a':['Unified and side-by-side views with search and jump to change','统一视图与左右对照，支持搜索和逐处跳转'],
+    'fd.b':['Undo a single file or a whole turn, including files git does not track','撤销单个文件或一整轮，git 没跟踪的文件也算'],
+    'fd.c':['Stage or restore individual hunks, then commit from the panel','按块暂存或还原，然后直接在面板里提交'],
+    'f1.title':['Real documents in, real documents out.','真实文档进，真实文档出。'],
+    'f1.body':['Hand it a spreadsheet, a report, or a deck and it edits the real file, keeping formulas, merged cells, and styles. It generates Word, Excel, and PowerPoint as Office Open XML with no Office install, then renders the first page to check its own work. The result opens in the side panel, next to the conversation that made it.','给它一份表格、报告或演示文稿，它改的是真实文件，保留公式、合并单元格和样式。无需安装 Office 即可生成 Word、Excel、PowerPoint（Office Open XML），并渲染首页自检成果。结果直接在侧边面板里打开，就在生成它的对话旁边。'],
+    'f1.a':['Reads .docx, .xlsx, .pptx, the older .doc, .xls, .ppt, and PDF','读取 .docx / .xlsx / .pptx，也读旧版 .doc / .xls / .ppt 和 PDF'],
+    'f1.b':['Writes .docx, .xlsx, .pptx, edits existing decks, and self-checks a render','生成 .docx / .xlsx / .pptx，能改已有的 PPT，并渲染自检'],
+    'f1.c':['Previews documents, sheets, slides, PDF, CSV, Markdown, and images in place','文档、表格、幻灯片、PDF、CSV、Markdown、图片都能就地预览'],
+    'f3.title':['A browser it drives, side by side with the conversation.','一个它能驱动的浏览器，就在对话旁边。'],
+    'f3.body':['An embedded browser is driven through the accessibility tree by role and name, not brittle pixel coordinates. The page stays open next to the transcript, so you see what it read and what it concluded.','内嵌浏览器通过无障碍树按角色和名称操作，而不是脆弱的像素坐标。页面一直开在对话旁边，它读了什么、得出了什么，你都看得见。'],
+    'f3.a':['Elements addressed by role and name','按角色和名称定位元素'],
+    'f3.b':['Tools a page declares are picked up automatically','页面自己声明的工具会被自动接入'],
+    'f3.c':['The same approach reaches your other apps','同一套方式延伸到你的其他应用'],
+    'pc.title':['Your other apps, with a picture-in-picture of what it touches.','操作你的其他应用，画中画实时显示它碰了什么。'],
+    'pc.body':['It reads an app\'s accessibility tree and acts in the background where it can. A live thumbnail shows the window it is driving, with the cursor it is about to use.','它读取应用的无障碍树，尽量在后台执行。一个实时缩略图显示正在操作的窗口，以及它即将落下的光标。'],
+    'pc.a.t':['Per-app authorization','按应用授权'],'pc.a.b':['It asks before touching an app, and the grant lasts for the session.','动手前先问，授权只在本次会话内有效。'],
+    'pc.b.t':['Background first','后台优先'],'pc.b.b':['Clicks and text go through the accessibility interface when possible, without stealing your mouse.','点击和输入尽量走无障碍接口，不借用你的鼠标。'],
+    'pc.c.t':['Honest when it cannot see','看不见就直说'],'pc.c.b':['When a window will not expose its elements, it says so instead of guessing.','窗口不暴露元素时，它会如实告诉你，而不是瞎猜。'],
+    'work.kicker':['In practice','实战'],'work.title':['Four tasks, start to finish.','四个任务，从头到尾。'],
+    'g1.t':['Add a --json flag, with tests','给命令行工具加 --json 参数并补测试'],'g1.b':['Reads the code, edits three files, runs the suite, leaves a change receipt.','读代码、改三个文件、跑测试，留下一份改动回执。'],
+    'g2.t':['A board pack from a CSV','从一份 CSV 做出董事会材料'],'g2.b':['An Excel workbook with summaries and a chart, plus a one-page deck, both render-checked.','带汇总表和图表的 Excel，加一页 PPT 摘要，都渲染自检过。'],
+    'g3.t':['Read a reference page','读一页参考文档'],'g3.b':['Opens the page in the embedded browser and returns three precise points.','在内嵌浏览器里打开页面，回来三条准确的要点。'],
+    'g4.t':['Look a word up in Dictionary','在词典应用里查一个词'],'g4.b':['Launches the app, types the word, reads the entry back.','启动应用、输入单词、把词条读回来。'],
+    'loop.title':['Built to run long tasks, not just answer.','为跑长任务而造，不只是回答。'],
+    'loop.sub':['The loop is designed so a long job does not drown its own context, and so you can see what it changed.','这套循环的设计，是不让一个长任务淹没自己的上下文，也让你看得见它改了什么。'],
+    'b1.t':['Per-file review','按文件审阅'],'b1.b':['Diffs, a change receipt, and undo per file.','diff、改动回执，每个文件都能撤销。'],
+    'b2.t':['Context that lasts','撑得住的上下文'],'b2.b':['Compaction past 80 percent of the window, pairing-safe, with originals archived. A background recap keeps a long run legible.','超过窗口 80% 自动压缩，配对安全，原件归档。后台回顾让长任务始终读得懂。'],
+    'b3.t':['Code Mode','代码模式'],'b3.b':['For read-heavy work it writes a small program to orchestrate tools. Only what it prints enters the context.','面对读得多、结论少的活，它写一段小程序来编排工具，只有 print 出来的东西进上下文。'],
+    'b4.t':['Parallel and delegated','并行与委派'],'b4.b':['Independent tool calls run at once; sub-agents take isolated side quests and return only the conclusion.','相互独立的工具调用同时进行；子代理在隔离上下文里跑支线，只把结论带回来。'],
+    'b5.t':['Project memory, skills, MCP','项目记忆、技能与 MCP'],'b5.b':['It learns your conventions across sessions. Agent Skills and Model Context Protocol servers extend what it can do.','它跨会话记住你的约定。Agent Skills 和 Model Context Protocol 服务器扩展它的能力。'],
+    'b6.t':['Light, dark, and three more themes','浅色、深色，还有三套主题'],'b6.b':['A high-density desktop tool that follows your system.','高密度的桌面工具，跟随你的系统外观。'],
+    'model.k':['Model access','模型接入'],'model.title':['Not tied to any vendor.','不绑定任何厂商。'],
+    'model.body':['The app speaks protocols, not services. Switching backends is a change of URL, no code. Hosted service, gateway, or a local model on your own box all work the same way. There is no built-in model list on purpose, so nothing goes stale.','应用讲的是协议，不是服务。换后端只是换个 URL，不改代码。托管服务、网关，或你本机的本地模型，用起来都一样。刻意不内置模型列表，这样不会过时。'],
+    'model.f1':['Protocol','协议'],'model.f2':['Base URL','Base URL'],'model.f3':['API key','API Key'],'model.f4':['Model name','模型名'],
+    'model.p1':['Widest coverage. Most hosted services, gateways, and local servers such as llama.cpp, vLLM, Ollama, and LM Studio expose a compatible endpoint.','覆盖最广。多数托管服务、网关，以及 llama.cpp、vLLM、Ollama、LM Studio 等本地服务器都提供兼容接口。'],
+    'model.p2':['A content-block protocol that expresses tool calls more directly.','基于内容块的协议，工具调用表达得更直接。'],
+    'cta.title':['Give the agent the whole machine.','把整台机器交给代理。'],
+    'cta.sub':['Free. Bring your own model. Every consequential action stays behind your approval.','免费，自带模型。每一个有后果的动作，都在你的批准之后。'],
+    'cta.dl':['Download','下载'],'cta.src':['All releases','全部版本'],
+    'foot.tag':['A local-first desktop AI agent.','本地优先的桌面 AI 代理。'],'foot.dl':['Download','下载'],'foot.docs':['Docs','文档']
+  };
+  var HTML_KEYS = {'hero.title':1};
+  function apply(lang){
+    var i = lang==='zh'?1:0;
+    document.documentElement.lang = lang==='zh'?'zh-CN':'en';
+    document.querySelectorAll('[data-t]').forEach(function(el){ var v = T[el.getAttribute('data-t')]; if(!v) return; if(HTML_KEYS[el.getAttribute('data-t')]) el.innerHTML = v[i]; else el.textContent = v[i]; });
+    document.getElementById('lang').textContent = lang==='zh'?'EN':'中文';
+    try{ localStorage.setItem('cowork-lang', lang); }catch(e){}
+  }
+  var saved; try{ saved = localStorage.getItem('cowork-lang'); }catch(e){}
+  var q = /[?&]lang=(zh|en)\b/.exec(location.search);
+  apply((q && q[1]) || saved || ((navigator.language||'').toLowerCase().indexOf('zh')===0 ? 'zh' : 'en'));
+  document.getElementById('lang').addEventListener('click', function(){ apply(document.documentElement.lang.indexOf('zh')===0 ? 'en' : 'zh'); });
+
+  var hdr = document.getElementById('hdr');
+  var onScroll = function(){ hdr.classList.toggle('stuck', window.scrollY > 8); };
+  document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // staggered siblings: each .reveal inside a [data-stagger] container waits a little longer than the previous one
+  document.querySelectorAll('[data-stagger]').forEach(function(box){
+    var step = Number(box.getAttribute('data-stagger')) || 90;
+    Array.prototype.slice.call(box.querySelectorAll('.si')).forEach(function(el, i){ el.style.setProperty('--d', (i * step) + 'ms'); });
+  });
+
+  // headline: wrap words (or CJK characters) in masks so they rise in sequence; redone on every language switch
+  function splitHeadline(h1){
+    var idx = 0;
+    function walk(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(n){
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function(chunk){
+            if (!chunk) return;
+            if (/^\s+$/.test(chunk)) { frag.appendChild(document.createTextNode(' ')); return; }
+            var parts = /[\u3400-\u9fff\u3000-\u303f\uff00-\uffef]/.test(chunk) ? chunk.split('') : [chunk];
+            parts.forEach(function(p){
+              var w = document.createElement('span'); w.className = 'w';
+              var inner = document.createElement('span'); inner.textContent = p; inner.style.setProperty('--wd', (idx++ * 45) + 'ms');
+              w.appendChild(inner); frag.appendChild(w);
+            });
+          });
+          node.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+      });
+    }
+    h1.classList.remove('words-in'); walk(h1);
+    if (reduce) { h1.classList.add('words-in'); return; }
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ h1.classList.add('words-in'); }); });
+  }
+  var h1 = document.querySelector('.hero h1');
+  splitHeadline(h1);
+  document.getElementById('lang').addEventListener('click', function(){ splitHeadline(h1); });
+
+  // pointer tilt on the hero window and gallery cards (transform only, no layout work)
+  if (!reduce) document.querySelectorAll('.tilt').forEach(function(el){
+    var max = Number(el.getAttribute('data-tilt')) || 3;
+    el.addEventListener('pointermove', function(e){
+      var r = el.getBoundingClientRect(); var px = (e.clientX - r.left) / r.width - .5; var py = (e.clientY - r.top) / r.height - .5;
+      el.classList.add('active'); el.style.setProperty('--ry', (px * max * 2) + 'deg'); el.style.setProperty('--rx', (-py * max * 2) + 'deg');
+    });
+    el.addEventListener('pointerleave', function(){ el.classList.remove('active'); el.style.setProperty('--ry', '0deg'); el.style.setProperty('--rx', '0deg'); });
+  });
+  // cursor spotlight inside the capability cells
+  document.querySelectorAll('.cell').forEach(function(el){
+    el.addEventListener('pointermove', function(e){ var r = el.getBoundingClientRect(); el.style.setProperty('--mx', (e.clientX - r.left) + 'px'); el.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
+  });
+
+  // scroll-linked engine: one rAF per scroll frame, transforms only
+  var scrubs = Array.prototype.slice.call(document.querySelectorAll('[data-scrub]'));
+  var progressEl = document.querySelector('.progress');
+  var ticking = false;
+  function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function frame(){
+    ticking = false;
+    var vh = window.innerHeight || 800;
+    if (!reduce) scrubs.forEach(function(el){
+      var r = el.getBoundingClientRect();
+      // 0 when the top enters at the bottom edge, 1 once it has climbed 45% of the viewport
+      el.style.setProperty('--p', clamp((vh - r.top) / (vh * 0.45)).toFixed(3));
+    });
+    if (progressEl) { var doc = document.documentElement; progressEl.style.setProperty('--sp', clamp(window.scrollY / Math.max(1, doc.scrollHeight - vh)).toFixed(4)); }
+  }
+  function onFrame(){ if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+  document.addEventListener('scroll', onFrame, {passive:true}); window.addEventListener('resize', onFrame); frame();
+
+  var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  var vh = window.innerHeight || document.documentElement.clientHeight;
+  var below = [];
+  els.forEach(function(el){ var r = el.getBoundingClientRect(); if(reduce || r.top < vh * 0.92 || !('IntersectionObserver' in window)) el.classList.add('in'); else below.push(el); });
+  if(below.length){
+    var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {rootMargin:'0px 0px -48px 0px', threshold:.12});
+    below.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
+</body>
+</html>
