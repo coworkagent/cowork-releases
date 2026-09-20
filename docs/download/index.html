@@ -31,7 +31,7 @@
   html{scroll-behavior:smooth; overflow-x:hidden; overflow-x:clip}
   body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; overflow-x:clip}
   a{color:inherit; text-decoration:none}
-  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-.02em; line-height:1.08; margin:0}
+  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-.02em; line-height:1.08; margin:0; text-wrap:balance}
   p{margin:0}
   img{display:block; max-width:100%; height:auto}
   .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
@@ -300,47 +300,47 @@
 (function(){
   var RELEASES = 'https://github.com/coworkagent/cowork-releases/releases';
   var T = {
-    'nav.features':['Features','功能'],'nav.work':['In practice','实战'],'nav.model':['Model access','模型接入'],'nav.download':['Download','下载'],
+    'nav.features':['Features','功能'],'nav.work':['In practice','实际用起来'],'nav.model':['Model access','接入模型'],'nav.download':['Download','下载'],
     'hero.title':['Download cowork','下载 cowork'],
-    'hero.sub':['Free for macOS and Windows. It runs on your own machine and keeps itself up to date.','免费，支持 macOS 与 Windows。运行在你自己的机器上，之后会自动更新。'],
-    'pick.generic':['See all downloads','查看全部下载'],
-    'all.title':['All downloads','全部下载'],
-    'all.sub':['Pick the file that matches your computer. Every build is the same app and the same version.','选择与你电脑匹配的文件。每个安装包都是同一个应用、同一个版本。'],
-    'mac.req':['macOS 13 Ventura or later. Signed and notarized.','macOS 13 Ventura 或更高版本。已签名并公证。'],
-    'win.req':['Windows 10 or later.','Windows 10 或更高版本。'],
+    'hero.sub':['Free for macOS and Windows. It runs on your own machine and keeps itself up to date.','免费使用，支持 macOS 和 Windows。装在你自己的电脑上，以后有新版本会自己更新。'],
+    'pick.generic':['See all downloads','看看所有安装包'],
+    'all.title':['All downloads','所有安装包'],
+    'all.sub':['Pick the file that matches your computer. Every build is the same app and the same version.','选一个和你电脑对得上的就行。四个安装包装出来是同一个应用、同一个版本。'],
+    'mac.req':['macOS 13 Ventura or later. Signed and notarized.','需要 macOS 13 Ventura 或更新的系统。已经过 Apple 签名和公证。'],
+    'win.req':['Windows 10 or later.','需要 Windows 10 或更新的系统。'],
     'mac.arm':['Apple silicon','Apple 芯片'],'mac.intel':['Intel','Intel 芯片'],
-    'win.x64':['x64, most PCs','x64，大多数电脑'],'win.arm':['Arm','Arm'],
-    'tag.mine':['Matches this computer','与这台电脑匹配'],'dl':['Download','下载'],
-    'ins.title':['Install it','安装'],
-    'mac.s1.t':['Open the downloaded .dmg','打开下载的 .dmg'],'mac.s1.b':['It is in your Downloads folder.','它在“下载”文件夹里。'],
-    'mac.s2.t':['Drag cowork to Applications','把 cowork 拖进“应用程序”'],'mac.s2.b':['Then eject the disk image.','然后推出磁盘映像。'],
-    'mac.s3.t':['Open cowork and add a model','打开 cowork，添加一个模型'],
-    'mac.s3.b':['Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.','任何 OpenAI 兼容或 Anthropic 风格的接口都可以。密钥只保存在这台电脑上。'],
-    'mac.n.t':['Opens without a warning','打开时不会有警告'],
-    'mac.n.b':['The macOS builds are signed with a Developer ID and notarized by Apple, so Gatekeeper lets them through. When cowork first controls another app, macOS asks for Accessibility permission. That prompt is expected.','macOS 版本使用 Developer ID 签名并经过 Apple 公证，Gatekeeper 会直接放行。cowork 第一次操作其他应用时，macOS 会请求“辅助功能”权限，这个提示是正常的。'],
-    'win.s1.t':['Run the downloaded setup file','运行下载的安装程序'],'win.s1.b':['It installs for your user account and needs no administrator rights.','它安装到当前用户下，不需要管理员权限。'],
-    'win.s2.t':['Let it past SmartScreen','让它通过 SmartScreen'],'win.s2.b':['Choose More info, then Run anyway.','点“更多信息”，再点“仍要运行”。'],
-    'win.s3.t':['Open cowork and add a model','打开 cowork，添加一个模型'],
-    'win.s3.b':['Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.','任何 OpenAI 兼容或 Anthropic 风格的接口都可以。密钥只保存在这台电脑上。'],
-    'win.n.t':['Why Windows shows a warning','为什么 Windows 会提示警告'],
-    'win.n.b':['The Windows installers are not code-signed yet, so SmartScreen does not recognize the publisher. The files come straight from our release page, and their checksums are in latest.yml next to them.','Windows 安装包目前还没有代码签名，所以 SmartScreen 不认识发布者。文件直接来自我们的发布页，校验值在同一页的 latest.yml 里。'],
-    'aft.title':['Already installed?','已经装过了？'],
-    'aft.b1':['From version 0.8.4 on, cowork finds new versions on its own, shows you what changed, and installs them when you say so or when you quit.','从 0.8.4 起，cowork 会自己发现新版本，告诉你改了什么，在你确认时或退出应用时装上。'],
-    'aft.b2':['Version 0.8.3 and earlier cannot find updates. Install the current version once from this page, and you are set.','0.8.3 及更早的版本找不到更新。在这个页面手动安装一次当前版本即可，之后就不用管了。'],
-    'aft.notes':['Release notes','更新说明'],'aft.all':['Earlier versions','历史版本'],'aft.issue':['Report a problem','反馈问题'],
-    'foot.tag':['A local-first desktop AI agent.','本地优先的桌面 AI 代理。'],'foot.home':['Home','首页'],'foot.docs':['Docs','文档'],
+    'win.x64':['x64, most PCs','x64，绝大多数电脑选这个'],'win.arm':['Arm','Arm'],
+    'tag.mine':['Matches this computer','适合这台电脑'],'dl':['Download','下载'],
+    'ins.title':['Install it','怎么安装'],
+    'mac.s1.t':['Open the downloaded .dmg','打开下载好的 .dmg 文件'],'mac.s1.b':['It is in your Downloads folder.','一般在“下载”文件夹里。'],
+    'mac.s2.t':['Drag cowork to Applications','把 cowork 拖进“应用程序”'],'mac.s2.b':['Then eject the disk image.','拖完之后，把这个磁盘映像推出就行。'],
+    'mac.s3.t':['Open cowork and add a model','打开 cowork，配一个模型'],
+    'mac.s3.b':['Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.','只要是 OpenAI 兼容或 Anthropic 风格的接口都可以。密钥只存在你这台电脑上。'],
+    'mac.n.t':['Opens without a warning','打开时不会弹安全警告'],
+    'mac.n.b':['The macOS builds are signed with a Developer ID and notarized by Apple, so Gatekeeper lets them through. When cowork first controls another app, macOS asks for Accessibility permission. That prompt is expected.','macOS 版用 Developer ID 签了名，也通过了 Apple 的公证，系统会直接放行。cowork 第一次帮你操作别的应用时，macOS 会来要“辅助功能”权限，这是正常的，点允许就好。'],
+    'win.s1.t':['Run the downloaded setup file','双击运行下载好的安装程序'],'win.s1.b':['It installs for your user account and needs no administrator rights.','它只装到你当前的用户下面，不需要管理员权限。'],
+    'win.s2.t':['Let it past SmartScreen','遇到 SmartScreen 拦截，点过去就行'],'win.s2.b':['Choose More info, then Run anyway.','先点“更多信息”，再点“仍要运行”。'],
+    'win.s3.t':['Open cowork and add a model','打开 cowork，配一个模型'],
+    'win.s3.b':['Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.','只要是 OpenAI 兼容或 Anthropic 风格的接口都可以。密钥只存在你这台电脑上。'],
+    'win.n.t':['Why Windows shows a warning','为什么 Windows 会弹警告'],
+    'win.n.b':['The Windows installers are not code-signed yet, so SmartScreen does not recognize the publisher. The files come straight from our release page, and their checksums are in latest.yml next to them.','Windows 版的安装包暂时还没做代码签名，所以 SmartScreen 认不出发布者。文件都是从我们的发布页直接下载的，校验值就在同一页的 latest.yml 里，可以自己核对。'],
+    'aft.title':['Already installed?','之前已经装过了？'],
+    'aft.b1':['From version 0.8.4 on, cowork finds new versions on its own, shows you what changed, and installs them when you say so or when you quit.','从 0.8.4 开始，cowork 会自己检查新版本，告诉你这一版改了什么，等你点确认或者退出应用的时候再装上。'],
+    'aft.b2':['Version 0.8.3 and earlier cannot find updates. Install the current version once from this page, and you are set.','0.8.3 和更早的版本收不到更新。在这个页面手动装一次最新版就好，以后就不用操心了。'],
+    'aft.notes':['Release notes','这一版改了什么'],'aft.all':['Earlier versions','以前的版本'],'aft.issue':['Report a problem','遇到问题？告诉我们'],
+    'foot.tag':['A local-first desktop AI agent.','跑在你自己电脑上的桌面 AI Agent。'],'foot.home':['Home','首页'],'foot.docs':['Docs','文档'],
     // dynamic
     'os.mac':['macOS','macOS'],'os.win':['Windows','Windows'],
     'btn.for':['Download for {os}','下载 {os} 版'],
     'arch.mac-arm64':['Apple silicon','Apple 芯片'],'arch.mac-x64':['Intel','Intel 芯片'],'arch.win-x64':['x64','x64'],'arch.win-arm64':['Arm','Arm'],
     'meta.version':['Version {v}','版本 {v}'],
-    'alt.mac-arm64':['On an Intel Mac? <a href="{u}">Get the Intel build</a>. Not sure: Apple menu, About This Mac.','是 Intel 芯片的 Mac？<a href="{u}">下载 Intel 版</a>。不确定的话：苹果菜单，“关于本机”。'],
-    'alt.mac-x64':['On a Mac with Apple silicon? <a href="{u}">Get the Apple silicon build</a>.','是 Apple 芯片的 Mac？<a href="{u}">下载 Apple 芯片版</a>。'],
-    'alt.win-x64':['On a Windows on Arm device? <a href="{u}">Get the Arm build</a>.','是 Arm 架构的 Windows 设备？<a href="{u}">下载 Arm 版</a>。'],
-    'alt.win-arm64':['On a regular x64 PC? <a href="{u}">Get the x64 build</a>.','是普通的 x64 电脑？<a href="{u}">下载 x64 版</a>。'],
-    'alt.other':['cowork runs on macOS and Windows. Open this page on your computer, or pick a file below.','cowork 运行在 macOS 和 Windows 上。请在电脑上打开这个页面，或在下面选择文件。'],
-    'status.auto':['Your download is starting. If nothing happens, use the button above.','下载正在开始。如果没有反应，请点上面的按钮。'],
-    'status.offline':['The file list could not be loaded, so the buttons open the release page instead.','没能加载文件列表，按钮会改为打开发布页。']
+    'alt.mac-arm64':['On an Intel Mac? <a href="{u}">Get the Intel build</a>. Not sure: Apple menu, About This Mac.','你的 Mac 是 Intel 芯片？<a href="{u}">下载 Intel 版</a>。不确定的话，点左上角苹果菜单里的“关于本机”看一下。'],
+    'alt.mac-x64':['On a Mac with Apple silicon? <a href="{u}">Get the Apple silicon build</a>.','你的 Mac 是 Apple 芯片（M 系列）？<a href="{u}">下载 Apple 芯片版</a>。'],
+    'alt.win-x64':['On a Windows on Arm device? <a href="{u}">Get the Arm build</a>.','你用的是 Arm 架构的 Windows 设备？<a href="{u}">下载 Arm 版</a>。'],
+    'alt.win-arm64':['On a regular x64 PC? <a href="{u}">Get the x64 build</a>.','你用的是普通的 x64 电脑？<a href="{u}">下载 x64 版</a>。'],
+    'alt.other':['cowork runs on macOS and Windows. Open this page on your computer, or pick a file below.','cowork 目前支持 macOS 和 Windows。请在电脑上打开这个页面，或者直接在下面挑一个安装包。'],
+    'status.auto':['Your download is starting. If nothing happens, use the button above.','马上开始下载。如果没反应，点一下上面的按钮。'],
+    'status.offline':['The file list could not be loaded, so the buttons open the release page instead.','安装包列表没加载出来，按钮会先带你去发布页下载。']
   };
   var HTML_KEYS = {};
   var lang = 'en';
@@ -417,7 +417,7 @@
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     document.querySelectorAll('[data-t]').forEach(function(el){ var k = el.getAttribute('data-t'); if(T[k]) el.textContent = t(k); });
     $('lang').textContent = lang === 'zh' ? 'EN' : '中文';
-    document.title = lang === 'zh' ? '下载 cowork：macOS 与 Windows' : 'Download cowork for macOS and Windows';
+    document.title = lang === 'zh' ? '下载 cowork（macOS 和 Windows）' : 'Download cowork for macOS and Windows';
 
     var key = detected.os ? detected.os + '-' + detected.arch : null;
     var other = detected.os ? detected.os + '-' + (detected.arch === 'arm64' ? 'x64' : 'arm64') : null;
