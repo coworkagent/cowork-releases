@@ -1,0 +1,26 @@
+{
+  "version": "0.8.3",
+  "published": "2026-09-20T11:51:19Z",
+  "assets": [
+    {
+      "name": "cowork-0.8.3-mac-arm64.dmg",
+      "size": 336223633,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.8.3/cowork-0.8.3-mac-arm64.dmg"
+    },
+    {
+      "name": "cowork-0.8.3-mac-x64.dmg",
+      "size": 346591827,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.8.3/cowork-0.8.3-mac-x64.dmg"
+    },
+    {
+      "name": "cowork-0.8.3-win-arm64-setup.exe",
+      "size": 258345642,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.8.3/cowork-0.8.3-win-arm64-setup.exe"
+    },
+    {
+      "name": "cowork-0.8.3-win-x64-setup.exe",
+      "size": 271191582,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.8.3/cowork-0.8.3-win-x64-setup.exe"
+    }
+  ]
+}

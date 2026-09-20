@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>Download cowork for macOS and Windows</title>
+<meta name="description" content="Download cowork, the local-first desktop AI agent, for macOS (Apple silicon and Intel) and Windows (x64 and Arm). Free. The macOS builds are signed and notarized." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%232b7cb8'/%3E%3Cpath d='M74 40 A28 28 0 1 0 74 88' fill='none' stroke='%23fff' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M62 56 L70 88 L84 64 L98 88 L106 56' fill='none' stroke='%230b2a3f' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+<style>
+  @font-face { font-family:'Sora'; src:url('../fonts/sora-latin.woff2') format('woff2'); font-weight:100 800; font-display:swap; }
+  @font-face { font-family:'Geist'; src:url('../fonts/geist-variable.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+  @font-face { font-family:'Geist Mono'; src:url('../fonts/geist-mono-variable.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+
+  /* Tokens, nav, buttons and footer are the landing page's, kept identical so the two pages read as one site. */
+  :root{
+    --bg:#fbfbfc; --bg-soft:#f3f5f7; --surface:#ffffff;
+    --ink:#161a1f; --ink-2:#4b5662; --ink-3:#7f8a98;
+    --line:#e6e9ee; --line-2:#eef1f4;
+    --accent:#2b7cb8; --accent-ink:#1f5c88; --accent-soft:#eaf2f9; --accent-line:#c7ddef;
+    --radius:14px; --radius-pill:999px;
+    --shadow:0 24px 60px -28px rgba(22,40,63,.26), 0 8px 24px -16px rgba(22,26,31,.12);
+    --shadow-lift:0 44px 90px -40px rgba(22,40,63,.34), 0 12px 30px -18px rgba(22,26,31,.14);
+    --maxw:1180px;
+    --sans:'Geist',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --display:'Sora',var(--sans);
+    --mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; overflow-x:hidden; overflow-x:clip}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; overflow-x:clip}
+  a{color:inherit; text-decoration:none}
+  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-.02em; line-height:1.08; margin:0}
+  p{margin:0}
+  img{display:block; max-width:100%; height:auto}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  .lede{color:var(--ink-2); font-size:18.5px; line-height:1.65; max-width:52ch}
+  .h2{font-size:clamp(28px,3.6vw,42px)}
+
+  header{position:sticky; top:0; z-index:50; background:rgba(251,251,252,.84); backdrop-filter:saturate(180%) blur(14px); border-bottom:1px solid var(--line)}
+  .nav{display:flex; align-items:center; gap:24px; height:64px}
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--display); font-weight:600; font-size:19px}
+  .brand svg{width:26px; height:26px; border-radius:7px; display:block}
+  .nav-links{display:flex; align-items:center; gap:26px; margin-left:auto}
+  .nav-links a{color:var(--ink-2); font-size:14.5px; transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-links a[aria-current]{color:var(--ink); font-weight:500}
+  .lang{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); border:1px solid var(--line); background:var(--surface); border-radius:var(--radius-pill); padding:6px 12px; cursor:pointer; transition:border-color .2s,color .2s}
+  .lang:hover{border-color:var(--ink-3); color:var(--ink)}
+
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; font-weight:500; font-size:14.5px; border-radius:var(--radius-pill); padding:9px 18px; border:1px solid transparent; cursor:pointer; white-space:nowrap; transition:background .2s,border-color .2s,transform .12s,box-shadow .2s}
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible, .lang:focus-visible, .seg button:focus-visible, a:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-primary:hover{background:var(--accent-ink)}
+  .btn-ghost{background:var(--surface); color:var(--ink); border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--ink-3)}
+  .btn-xl{padding:16px 30px; font-size:16.5px; box-shadow:0 14px 30px -14px rgba(43,124,184,.55)}
+  .btn svg{width:18px; height:18px; flex:none}
+
+  /* hero: the one download that fits this computer */
+  .hero{position:relative; padding:76px 0 64px; overflow:hidden}
+  .hero-grid{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,6fr); gap:56px; align-items:center}
+  .hero h1{font-size:clamp(36px,4.3vw,54px)}
+  .hero .lede{margin-top:20px}
+  .pick{margin-top:34px}
+  .pick-meta{display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:16px; font-family:var(--mono); font-size:13px; color:var(--ink-2); min-height:21px}
+  .pick-meta b{font-weight:500; color:var(--ink)}
+  .pick-alt{margin-top:18px; font-size:14.5px; color:var(--ink-2); max-width:46ch}
+  .pick-alt a, .textlink{color:var(--accent-ink); border-bottom:1px solid var(--accent-line); transition:border-color .2s}
+  .pick-alt a:hover, .textlink:hover{border-color:var(--accent-ink)}
+  .status{display:none; margin-top:18px; padding:12px 16px; border-radius:var(--radius); background:var(--accent-soft); border:1px solid var(--accent-line); color:var(--accent-ink); font-size:14.5px; max-width:46ch}
+  .status.on{display:block}
+  .skeleton{display:inline-block; width:210px; height:14px; border-radius:6px; background:linear-gradient(90deg,var(--line-2),var(--line),var(--line-2)); background-size:200% 100%; animation:shimmer 1.4s linear infinite}
+  @keyframes shimmer{to{background-position:-200% 0}}
+  .hero-media{position:relative; min-width:0}
+  .shot{border-radius:var(--radius); background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow-lift); overflow:hidden}
+  .hero-media .shot{width:122%; max-width:none}
+  .hero-glow{position:absolute; inset:-20% 0 auto auto; width:50%; height:130%; background:radial-gradient(55% 50% at 60% 30%, rgba(43,124,184,.13), transparent 70%); filter:blur(24px); pointer-events:none}
+  .hero .wrap{position:relative; z-index:1}
+
+  .band{padding:88px 0}
+  .band-soft{background:var(--bg-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .band-head p{margin-top:14px}
+
+  /* every build, grouped by system */
+  .platforms{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-top:44px}
+  .platform{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:28px; transition:border-color .25s, box-shadow .25s}
+  .platform.mine{border-color:var(--accent-line); box-shadow:var(--shadow)}
+  .platform-head{display:flex; align-items:center; gap:14px}
+  .platform-head svg{width:30px; height:30px; flex:none; color:var(--ink)}
+  .platform-head h3{font-size:22px}
+  .platform-head p{font-size:13.5px; color:var(--ink-3); margin-top:3px}
+  .builds{margin-top:22px; display:grid; gap:12px}
+  .build{display:flex; align-items:center; gap:16px; padding:16px 18px; border-radius:12px; background:var(--bg); border:1px solid var(--line-2)}
+  .build.mine{background:var(--accent-soft); border-color:var(--accent-line)}
+  .build-name{font-weight:500; font-size:15.5px}
+  .build-file{font-family:var(--mono); font-size:12.5px; color:var(--ink-3); margin-top:2px}
+  .build-tag{display:none; font-size:12px; font-weight:500; color:var(--accent-ink); margin-top:4px}
+  .build.mine .build-tag{display:block}
+  .build .btn{margin-left:auto}
+
+  /* install: steps on the left, the one thing worth knowing on the right */
+  .install{display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:56px; margin-top:36px; align-items:start}
+  .seg{display:inline-flex; padding:4px; border-radius:var(--radius-pill); background:var(--bg-soft); border:1px solid var(--line); margin-top:28px}
+  .seg button{font:500 14.5px var(--sans); color:var(--ink-2); border:0; background:transparent; padding:8px 20px; border-radius:var(--radius-pill); cursor:pointer; transition:background .2s,color .2s}
+  .seg button[aria-selected="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(22,26,31,.08)}
+  .steps{list-style:none; counter-reset:step; margin:0; padding:0; display:grid; gap:22px}
+  .steps li{counter-increment:step; display:grid; grid-template-columns:36px minmax(0,1fr); gap:16px; align-items:start}
+  .steps li::before{content:counter(step); display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:var(--accent-soft); color:var(--accent-ink); font:600 15px var(--display)}
+  .steps h3{font-size:17px; font-family:var(--sans); font-weight:600; letter-spacing:0; line-height:1.4; margin-top:5px}
+  .steps p{color:var(--ink-2); font-size:15.5px; margin-top:4px; max-width:52ch}
+  .note{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:26px}
+  .note h3{font-size:18px}
+  .note p{color:var(--ink-2); font-size:15px; margin-top:10px}
+  [hidden]{display:none !important}
+
+  .after{max-width:64ch}
+  .after p{color:var(--ink-2); margin-top:14px}
+  .after-links{display:flex; flex-wrap:wrap; gap:12px 28px; margin-top:24px; font-size:15px}
+
+  footer{border-top:1px solid var(--line); padding:40px 0; color:var(--ink-3); font-size:14px}
+  .foot{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+  .foot .brand{font-size:16px; color:var(--ink-2)}
+  .foot-links{display:flex; gap:22px; margin-left:auto; flex-wrap:wrap}
+  .foot-links a{color:var(--ink-2)} .foot-links a:hover{color:var(--ink)}
+
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .8s cubic-bezier(.16,1,.3,1) var(--d,0s), transform .8s cubic-bezier(.16,1,.3,1) var(--d,0s)}
+  .reveal.in{opacity:1; transform:none}
+  .reveal[data-d="1"]{--d:.08s} .reveal[data-d="2"]{--d:.16s}
+
+  @media (max-width:920px){
+    .hero{padding:48px 0 40px}
+    .hero-grid{grid-template-columns:1fr; gap:40px}
+    .hero-media .shot{width:100%}
+    .platforms{grid-template-columns:1fr}
+    .install{grid-template-columns:1fr; gap:32px}
+    .nav-links a:not([aria-current]){display:none}
+    .band{padding:64px 0}
+  }
+  @media (max-width:520px){
+    .wrap{padding:0 16px}
+    .btn-xl{width:100%}
+    .build{flex-wrap:wrap}
+    .build .btn{margin-left:0; width:100%}
+    .platform{padding:22px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1; transform:none; transition:none}
+    .skeleton{animation:none}
+    .btn,.platform{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="../" aria-label="cowork">
+      <svg viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#2b7cb8"/><path d="M74 40 A28 28 0 1 0 74 88" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M62 56 L70 88 L84 64 L98 88 L106 56" fill="none" stroke="#0b2a3f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      cowork
+    </a>
+    <nav class="nav-links">
+      <a href="../#features" data-t="nav.features">Features</a>
+      <a href="../#work" data-t="nav.work">In practice</a>
+      <a href="../#model" data-t="nav.model">Model access</a>
+      <a href="./" aria-current="page" data-t="nav.download">Download</a>
+    </nav>
+    <button class="lang" id="lang" type="button">中文</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <h1 class="reveal" data-t="hero.title">Download cowork</h1>
+        <p class="lede reveal" data-d="1" data-t="hero.sub">Free for macOS and Windows. It runs on your own machine and keeps itself up to date.</p>
+        <div class="pick reveal" data-d="2">
+          <a class="btn btn-primary btn-xl" id="primary" href="#all">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+            <span id="primary-label" data-t="pick.generic">See all downloads</span>
+          </a>
+          <div class="pick-meta" id="meta" aria-live="polite"><span class="skeleton" aria-hidden="true"></span></div>
+          <p class="pick-alt" id="alt"></p>
+          <p class="status" id="status" role="status"></p>
+        </div>
+      </div>
+      <div class="hero-media reveal" data-d="1">
+        <div class="shot"><img src="../assets/hero.png" width="2000" height="1250" alt="The cowork window: a conversation on the left and the review panel with a diff on the right" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-soft" id="all">
+    <div class="wrap">
+      <div class="band-head reveal">
+        <h2 class="h2" data-t="all.title">All downloads</h2>
+        <p class="lede" data-t="all.sub">Pick the file that matches your computer. Every build is the same app and the same version.</p>
+      </div>
+      <div class="platforms">
+        <article class="platform reveal" data-os="mac">
+          <div class="platform-head">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+            <div><h3>macOS</h3><p data-t="mac.req">macOS 13 Ventura or later. Signed and notarized.</p></div>
+          </div>
+          <div class="builds">
+            <div class="build" data-build="mac-arm64">
+              <div><div class="build-name" data-t="mac.arm">Apple silicon</div><div class="build-file" data-file></div><div class="build-tag" data-t="tag.mine">Matches this computer</div></div>
+              <a class="btn btn-ghost" data-dl href="https://github.com/coworkagent/cowork-releases/releases/latest"><span data-t="dl">Download</span></a>
+            </div>
+            <div class="build" data-build="mac-x64">
+              <div><div class="build-name" data-t="mac.intel">Intel</div><div class="build-file" data-file></div><div class="build-tag" data-t="tag.mine">Matches this computer</div></div>
+              <a class="btn btn-ghost" data-dl href="https://github.com/coworkagent/cowork-releases/releases/latest"><span data-t="dl">Download</span></a>
+            </div>
+          </div>
+        </article>
+        <article class="platform reveal" data-d="1" data-os="win">
+          <div class="platform-head">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z"/></svg>
+            <div><h3>Windows</h3><p data-t="win.req">Windows 10 or later.</p></div>
+          </div>
+          <div class="builds">
+            <div class="build" data-build="win-x64">
+              <div><div class="build-name" data-t="win.x64">x64, most PCs</div><div class="build-file" data-file></div><div class="build-tag" data-t="tag.mine">Matches this computer</div></div>
+              <a class="btn btn-ghost" data-dl href="https://github.com/coworkagent/cowork-releases/releases/latest"><span data-t="dl">Download</span></a>
+            </div>
+            <div class="build" data-build="win-arm64">
+              <div><div class="build-name" data-t="win.arm">Arm</div><div class="build-file" data-file></div><div class="build-tag" data-t="tag.mine">Matches this computer</div></div>
+              <a class="btn btn-ghost" data-dl href="https://github.com/coworkagent/cowork-releases/releases/latest"><span data-t="dl">Download</span></a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="install">
+    <div class="wrap">
+      <h2 class="h2 reveal" data-t="ins.title">Install it</h2>
+      <div class="seg reveal" role="tablist" aria-label="Operating system">
+        <button type="button" role="tab" id="tab-mac" aria-controls="panel-mac" aria-selected="true">macOS</button>
+        <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false">Windows</button>
+      </div>
+      <div class="install" id="panel-mac" role="tabpanel" aria-labelledby="tab-mac">
+        <ol class="steps reveal">
+          <li><div><h3 data-t="mac.s1.t">Open the downloaded .dmg</h3><p data-t="mac.s1.b">It is in your Downloads folder.</p></div></li>
+          <li><div><h3 data-t="mac.s2.t">Drag cowork to Applications</h3><p data-t="mac.s2.b">Then eject the disk image.</p></div></li>
+          <li><div><h3 data-t="mac.s3.t">Open cowork and add a model</h3><p data-t="mac.s3.b">Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.</p></div></li>
+        </ol>
+        <aside class="note reveal" data-d="1">
+          <h3 data-t="mac.n.t">Opens without a warning</h3>
+          <p data-t="mac.n.b">The macOS builds are signed with a Developer ID and notarized by Apple, so Gatekeeper lets them through. When cowork first controls another app, macOS asks for Accessibility permission. That prompt is expected.</p>
+        </aside>
+      </div>
+      <div class="install" id="panel-win" role="tabpanel" aria-labelledby="tab-win" hidden>
+        <ol class="steps">
+          <li><div><h3 data-t="win.s1.t">Run the downloaded setup file</h3><p data-t="win.s1.b">It installs for your user account and needs no administrator rights.</p></div></li>
+          <li><div><h3 data-t="win.s2.t">Let it past SmartScreen</h3><p data-t="win.s2.b">Choose More info, then Run anyway.</p></div></li>
+          <li><div><h3 data-t="win.s3.t">Open cowork and add a model</h3><p data-t="win.s3.b">Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.</p></div></li>
+        </ol>
+        <aside class="note">
+          <h3 data-t="win.n.t">Why Windows shows a warning</h3>
+          <p data-t="win.n.b">The Windows installers are not code-signed yet, so SmartScreen does not recognize the publisher. The files come straight from our release page, and their checksums are in latest.yml next to them.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-soft">
+    <div class="wrap"><div class="after reveal">
+      <h2 class="h2" data-t="aft.title">Already installed?</h2>
+      <p data-t="aft.b1">From version 0.8.4 on, cowork finds new versions on its own, shows you what changed, and installs them when you say so or when you quit.</p>
+      <p data-t="aft.b2">Version 0.8.3 and earlier cannot find updates. Install the current version once from this page, and you are set.</p>
+      <div class="after-links">
+        <a class="textlink" id="notes" href="https://github.com/coworkagent/cowork-releases/releases/latest" target="_blank" rel="noopener" data-t="aft.notes">Release notes</a>
+        <a class="textlink" href="https://github.com/coworkagent/cowork-releases/releases" target="_blank" rel="noopener" data-t="aft.all">Earlier versions</a>
+        <a class="textlink" href="https://github.com/coworkagent/cowork-releases/issues" target="_blank" rel="noopener" data-t="aft.issue">Report a problem</a>
+      </div>
+    </div></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="brand"><svg width="20" height="20" style="border-radius:6px" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#2b7cb8"/><path d="M74 40 A28 28 0 1 0 74 88" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M62 56 L70 88 L84 64 L98 88 L106 56" fill="none" stroke="#0b2a3f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>cowork</span>
+    <span data-t="foot.tag" style="color:var(--ink-3)">A local-first desktop AI agent.</span>
+    <div class="foot-links">
+      <a href="../" data-t="foot.home">Home</a>
+      <a href="https://github.com/coworkagent/cowork-releases" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/coworkagent/cowork-releases#readme" target="_blank" rel="noopener" data-t="foot.docs">Docs</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var RELEASES = 'https://github.com/coworkagent/cowork-releases/releases';
+  var T = {
+    'nav.features':['Features','功能'],'nav.work':['In practice','实战'],'nav.model':['Model access','模型接入'],'nav.download':['Download','下载'],
+    'hero.title':['Download cowork','下载 cowork'],
+    'hero.sub':['Free for macOS and Windows. It runs on your own machine and keeps itself up to date.','免费，支持 macOS 与 Windows。运行在你自己的机器上，之后会自动更新。'],
+    'pick.generic':['See all downloads','查看全部下载'],
+    'all.title':['All downloads','全部下载'],
+    'all.sub':['Pick the file that matches your computer. Every build is the same app and the same version.','选择与你电脑匹配的文件。每个安装包都是同一个应用、同一个版本。'],
+    'mac.req':['macOS 13 Ventura or later. Signed and notarized.','macOS 13 Ventura 或更高版本。已签名并公证。'],
+    'win.req':['Windows 10 or later.','Windows 10 或更高版本。'],
+    'mac.arm':['Apple silicon','Apple 芯片'],'mac.intel':['Intel','Intel 芯片'],
+    'win.x64':['x64, most PCs','x64，大多数电脑'],'win.arm':['Arm','Arm'],
+    'tag.mine':['Matches this computer','与这台电脑匹配'],'dl':['Download','下载'],
+    'ins.title':['Install it','安装'],
+    'mac.s1.t':['Open the downloaded .dmg','打开下载的 .dmg'],'mac.s1.b':['It is in your Downloads folder.','它在“下载”文件夹里。'],
+    'mac.s2.t':['Drag cowork to Applications','把 cowork 拖进“应用程序”'],'mac.s2.b':['Then eject the disk image.','然后推出磁盘映像。'],
+    'mac.s3.t':['Open cowork and add a model','打开 cowork，添加一个模型'],
+    'mac.s3.b':['Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.','任何 OpenAI 兼容或 Anthropic 风格的接口都可以。密钥只保存在这台电脑上。'],
+    'mac.n.t':['Opens without a warning','打开时不会有警告'],
+    'mac.n.b':['The macOS builds are signed with a Developer ID and notarized by Apple, so Gatekeeper lets them through. When cowork first controls another app, macOS asks for Accessibility permission. That prompt is expected.','macOS 版本使用 Developer ID 签名并经过 Apple 公证，Gatekeeper 会直接放行。cowork 第一次操作其他应用时，macOS 会请求“辅助功能”权限，这个提示是正常的。'],
+    'win.s1.t':['Run the downloaded setup file','运行下载的安装程序'],'win.s1.b':['It installs for your user account and needs no administrator rights.','它安装到当前用户下，不需要管理员权限。'],
+    'win.s2.t':['Let it past SmartScreen','让它通过 SmartScreen'],'win.s2.b':['Choose More info, then Run anyway.','点“更多信息”，再点“仍要运行”。'],
+    'win.s3.t':['Open cowork and add a model','打开 cowork，添加一个模型'],
+    'win.s3.b':['Any OpenAI-compatible or Anthropic-style endpoint works. Your key stays on this computer.','任何 OpenAI 兼容或 Anthropic 风格的接口都可以。密钥只保存在这台电脑上。'],
+    'win.n.t':['Why Windows shows a warning','为什么 Windows 会提示警告'],
+    'win.n.b':['The Windows installers are not code-signed yet, so SmartScreen does not recognize the publisher. The files come straight from our release page, and their checksums are in latest.yml next to them.','Windows 安装包目前还没有代码签名，所以 SmartScreen 不认识发布者。文件直接来自我们的发布页，校验值在同一页的 latest.yml 里。'],
+    'aft.title':['Already installed?','已经装过了？'],
+    'aft.b1':['From version 0.8.4 on, cowork finds new versions on its own, shows you what changed, and installs them when you say so or when you quit.','从 0.8.4 起，cowork 会自己发现新版本，告诉你改了什么，在你确认时或退出应用时装上。'],
+    'aft.b2':['Version 0.8.3 and earlier cannot find updates. Install the current version once from this page, and you are set.','0.8.3 及更早的版本找不到更新。在这个页面手动安装一次当前版本即可，之后就不用管了。'],
+    'aft.notes':['Release notes','更新说明'],'aft.all':['Earlier versions','历史版本'],'aft.issue':['Report a problem','反馈问题'],
+    'foot.tag':['A local-first desktop AI agent.','本地优先的桌面 AI 代理。'],'foot.home':['Home','首页'],'foot.docs':['Docs','文档'],
+    // dynamic
+    'os.mac':['macOS','macOS'],'os.win':['Windows','Windows'],
+    'btn.for':['Download for {os}','下载 {os} 版'],
+    'arch.mac-arm64':['Apple silicon','Apple 芯片'],'arch.mac-x64':['Intel','Intel 芯片'],'arch.win-x64':['x64','x64'],'arch.win-arm64':['Arm','Arm'],
+    'meta.version':['Version {v}','版本 {v}'],
+    'alt.mac-arm64':['On an Intel Mac? <a href="{u}">Get the Intel build</a>. Not sure: Apple menu, About This Mac.','是 Intel 芯片的 Mac？<a href="{u}">下载 Intel 版</a>。不确定的话：苹果菜单，“关于本机”。'],
+    'alt.mac-x64':['On a Mac with Apple silicon? <a href="{u}">Get the Apple silicon build</a>.','是 Apple 芯片的 Mac？<a href="{u}">下载 Apple 芯片版</a>。'],
+    'alt.win-x64':['On a Windows on Arm device? <a href="{u}">Get the Arm build</a>.','是 Arm 架构的 Windows 设备？<a href="{u}">下载 Arm 版</a>。'],
+    'alt.win-arm64':['On a regular x64 PC? <a href="{u}">Get the x64 build</a>.','是普通的 x64 电脑？<a href="{u}">下载 x64 版</a>。'],
+    'alt.other':['cowork runs on macOS and Windows. Open this page on your computer, or pick a file below.','cowork 运行在 macOS 和 Windows 上。请在电脑上打开这个页面，或在下面选择文件。'],
+    'status.auto':['Your download is starting. If nothing happens, use the button above.','下载正在开始。如果没有反应，请点上面的按钮。'],
+    'status.offline':['The file list could not be loaded, so the buttons open the release page instead.','没能加载文件列表，按钮会改为打开发布页。']
+  };
+  var HTML_KEYS = {};
+  var lang = 'en';
+  function t(key, vars){
+    var v = T[key]; if(!v) return key;
+    var s = v[lang === 'zh' ? 1 : 0];
+    if(vars) Object.keys(vars).forEach(function(k){ s = s.split('{'+k+'}').join(vars[k]); });
+    return s;
+  }
+
+  /* ---- which computer is this ---- */
+  var detected = { os:null, arch:null };
+  function detectSync(){
+    var ua = navigator.userAgent || '';
+    var plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+    var os = /Mac/i.test(plat) || /Mac OS X/.test(ua) ? 'mac' : (/Win/i.test(plat) || /Windows/.test(ua) ? 'win' : null);
+    // phones and tablets (iPadOS reports itself as a Mac, but has touch points)
+    if(/iPhone|iPad|iPod|Android/i.test(ua) || (os === 'mac' && navigator.maxTouchPoints > 1)) os = null;
+    var arch = null;
+    if(os === 'win') arch = /ARM64|aarch64/i.test(ua) ? 'arm64' : 'x64';
+    if(os === 'mac'){
+      // Most Macs sold since late 2020 use Apple silicon. Safari does not reveal the chip, so this is the default.
+      arch = 'arm64';
+      try{
+        var gl = document.createElement('canvas').getContext('webgl');
+        var ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
+        var r = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : '';
+        if(/Intel|AMD|Radeon/i.test(r) && !/Apple/i.test(r)) arch = 'x64';
+      }catch(e){}
+    }
+    return { os:os, arch:arch };
+  }
+  function detectAsync(){
+    var uad = navigator.userAgentData;
+    if(!uad || !uad.getHighEntropyValues) return Promise.resolve(null);
+    return uad.getHighEntropyValues(['architecture','bitness']).then(function(h){
+      if(!h || !h.architecture) return null;
+      return h.architecture === 'arm' ? 'arm64' : 'x64';
+    }).catch(function(){ return null; });
+  }
+
+  /* ---- what can be downloaded ---- */
+  var release = null; // { version, builds: { 'mac-arm64': {name,size,url}, ... } }
+  function fromAssets(version, assets){
+    var builds = {};
+    assets.forEach(function(a){
+      var m = /^cowork-[\d.]+-(mac)-(arm64|x64)\.dmg$/.exec(a.name) || /^cowork-[\d.]+-(win)-(arm64|x64)-setup\.exe$/.exec(a.name);
+      if(m) builds[m[1] + '-' + m[2]] = { name:a.name, size:a.size, url:a.url };
+    });
+    return Object.keys(builds).length ? { version:version, builds:builds } : null;
+  }
+  function newer(a, b){
+    var x = a.split('.').map(Number), y = b.split('.').map(Number);
+    for(var i = 0; i < 3; i++){ if((x[i]||0) !== (y[i]||0)) return (x[i]||0) > (y[i]||0); }
+    return false;
+  }
+  function loadBaked(){
+    return fetch('latest.json', { cache:'no-cache' }).then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ return d && d.version && d.assets ? fromAssets(d.version, d.assets) : null; }).catch(function(){ return null; });
+  }
+  function loadApi(){
+    return fetch('https://api.github.com/repos/coworkagent/cowork-releases/releases/latest', { headers:{ Accept:'application/vnd.github+json' } })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if(!d || !d.tag_name || !d.assets) return null;
+        return fromAssets(d.tag_name.replace(/^v/, ''), d.assets.map(function(a){ return { name:a.name, size:a.size, url:a.browser_download_url }; }));
+      }).catch(function(){ return null; });
+  }
+  function mb(bytes){ return Math.round(bytes / 1048576) + ' MB'; }
+
+  /* ---- paint ---- */
+  var $ = function(id){ return document.getElementById(id); };
+  function paint(){
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('[data-t]').forEach(function(el){ var k = el.getAttribute('data-t'); if(T[k]) el.textContent = t(k); });
+    $('lang').textContent = lang === 'zh' ? 'EN' : '中文';
+    document.title = lang === 'zh' ? '下载 cowork：macOS 与 Windows' : 'Download cowork for macOS and Windows';
+
+    var key = detected.os ? detected.os + '-' + detected.arch : null;
+    var other = detected.os ? detected.os + '-' + (detected.arch === 'arm64' ? 'x64' : 'arm64') : null;
+    var mine = release && key ? release.builds[key] : null;
+
+    document.querySelectorAll('[data-build]').forEach(function(row){
+      var b = release && release.builds[row.getAttribute('data-build')];
+      row.classList.toggle('mine', row.getAttribute('data-build') === key);
+      row.querySelector('[data-file]').textContent = b ? (/\.dmg$/.test(b.name) ? '.dmg' : '.exe') + '  ' + mb(b.size) : '';
+      row.querySelector('[data-dl]').href = b ? b.url : RELEASES + '/latest';
+    });
+    document.querySelectorAll('.platform').forEach(function(p){ p.classList.toggle('mine', p.getAttribute('data-os') === detected.os); });
+
+    var primary = $('primary'), meta = $('meta'), alt = $('alt');
+    if(detected.os){
+      $('primary-label').textContent = t('btn.for', { os:t('os.' + detected.os) });
+      primary.href = mine ? mine.url : RELEASES + '/latest';
+      if(release){
+        meta.innerHTML = '';
+        [t('arch.' + key), t('meta.version', { v:release.version }), mine ? mb(mine.size) : ''].filter(Boolean).forEach(function(text, i){
+          var el = document.createElement(i === 0 ? 'b' : 'span'); el.textContent = text; meta.appendChild(el);
+        });
+      }
+      var otherBuild = release && release.builds[other];
+      alt.innerHTML = t('alt.' + key, { u: otherBuild ? otherBuild.url : RELEASES + '/latest' });
+    } else {
+      $('primary-label').textContent = t('pick.generic');
+      primary.href = '#all';
+      meta.innerHTML = '';
+      if(release){ var v = document.createElement('span'); v.textContent = t('meta.version', { v:release.version }); meta.appendChild(v); }
+      alt.textContent = t('alt.other');
+    }
+    if(release) $('notes').href = RELEASES + '/tag/v' + release.version;
+    if(statusKey){ $('status').textContent = t(statusKey); $('status').classList.add('on'); }
+  }
+  var statusKey = null;
+
+  /* ---- install tabs ---- */
+  function showTab(os){
+    ['mac','win'].forEach(function(k){
+      $('tab-' + k).setAttribute('aria-selected', String(k === os));
+      $('panel-' + k).hidden = k !== os;
+    });
+  }
+  $('tab-mac').addEventListener('click', function(){ showTab('mac'); });
+  $('tab-win').addEventListener('click', function(){ showTab('win'); });
+
+  /* ---- language, shared with the landing page ---- */
+  try{ var q = new URLSearchParams(location.search).get('lang'); if(q === 'zh' || q === 'en') lang = q; else { var saved = localStorage.getItem('cowork-lang'); if(saved === 'zh' || saved === 'en') lang = saved; else if(/^zh/i.test(navigator.language || '')) lang = 'zh'; } }catch(e){}
+  $('lang').addEventListener('click', function(){ lang = lang === 'zh' ? 'en' : 'zh'; try{ localStorage.setItem('cowork-lang', lang); }catch(e){} paint(); });
+
+  /* ---- go ---- */
+  detected = detectSync();
+  // ?os=mac|win and ?arch=arm64|x64 pin the choice: for links like "get the Windows build", and for testing
+  var pinned = {};
+  try{ var qs = new URLSearchParams(location.search); if(/^(mac|win)$/.test(qs.get('os') || '')) pinned.os = qs.get('os'); if(/^(arm64|x64)$/.test(qs.get('arch') || '')) pinned.arch = qs.get('arch'); }catch(e){}
+  if(pinned.os){ detected.os = pinned.os; detected.arch = pinned.arch || (pinned.os === 'mac' ? 'arm64' : 'x64'); }
+  else if(pinned.arch && detected.os) detected.arch = pinned.arch;
+  if(detected.os) showTab(detected.os);
+  paint();
+
+  var wantsAuto = /[?&]auto=1\b/.test(location.search);
+  function autoStart(){
+    if(!wantsAuto || !detected.os || !release) return;
+    var b = release.builds[detected.os + '-' + detected.arch];
+    if(!b) return;
+    wantsAuto = false;
+    statusKey = 'status.auto'; paint();
+    // drop ?auto=1 so a reload does not download again
+    try{ history.replaceState(null, '', location.pathname + location.hash); }catch(e){}
+    setTimeout(function(){ location.assign(b.url); }, 900);
+  }
+
+  Promise.all([detectAsync(), loadBaked()]).then(function(res){
+    if(res[0] && detected.os && !pinned.os && !pinned.arch) detected.arch = res[0];
+    release = res[1];
+    paint(); autoStart();
+    // The baked list ships with the site; the API may already know a newer release.
+    loadApi().then(function(api){
+      if(api && (!release || newer(api.version, release.version))){ release = api; paint(); autoStart(); }
+      else if(!release && !api){ statusKey = 'status.offline'; $('meta').innerHTML = ''; paint(); }
+    });
+  });
+
+  /* ---- reveal on scroll ---- */
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = [].slice.call(document.querySelectorAll('.reveal')), below = [], vh = window.innerHeight;
+  els.forEach(function(el){ var r = el.getBoundingClientRect(); if(reduce || r.top < vh * 0.92 || !('IntersectionObserver' in window)) el.classList.add('in'); else below.push(el); });
+  if(below.length){
+    var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin:'0px 0px -48px 0px', threshold:.12 });
+    below.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
+</body>
+</html>
