@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-20T18:43:39.997Z",
+ "updated": "2026-09-21T20:24:11.228Z",
  "days": [
   {
    "date": "2026-09-20",
@@ -35,6 +35,24 @@
     "dl_mac_x64": 0,
     "dl_win_x64": 0,
     "dl_win_arm64": 3
+   }
+  },
+  {
+   "date": "2026-09-22",
+   "latest": "v0.9.0",
+   "checks_mac": 6,
+   "checks_win": 3,
+   "dl_mac_arm64": 4,
+   "dl_mac_x64": 3,
+   "dl_win_x64": 2,
+   "dl_win_arm64": 2,
+   "totals": {
+    "checks_mac": 9,
+    "checks_win": 9,
+    "dl_mac_arm64": 9,
+    "dl_mac_x64": 3,
+    "dl_win_x64": 2,
+    "dl_win_arm64": 5
    }
   }
  ]
