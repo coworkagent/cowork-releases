@@ -4,8 +4,13 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light" />
-<title>cowork: an AI agent that does the work</title>
-<meta name="description" content="A local-first desktop AI agent. It edits files, runs commands, drives your browser and other apps, and writes documents, on your own machine, with every risky action behind your approval." />
+<title>Cowork — Local work. Your models. Encrypted mobile access.</title>
+<meta name="description" content="A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. iOS app submitted for review." />
+<link rel="canonical" href="https://coworkagent.top/" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://coworkagent.top/" />
+<meta property="og:title" content="Cowork — Local work. Your models. Encrypted mobile access." />
+<meta property="og:description" content="A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. iOS app submitted for review." />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%232b7cb8'/%3E%3Cpath d='M74 40 A28 28 0 1 0 74 88' fill='none' stroke='%23fff' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M62 56 L70 88 L84 64 L98 88 L106 56' fill='none' stroke='%230b2a3f' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 
 <style>
@@ -258,6 +263,30 @@
   html[lang^="zh"] .kicker{letter-spacing:.08em}
   html[lang^="zh"] .lede{line-height:1.85}
   html[lang^="zh"] body{line-height:1.75}
+
+  /* 本地数据说明与移动端展示沿用现有字号、配色和间距。 */
+  section[id]{scroll-margin-top:88px}
+  .privacy-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:38px;padding-top:30px;border-top:1px solid var(--line)}
+  .privacy-grid h3{font-size:18px;line-height:1.4}
+  .privacy-grid p{margin-top:10px;color:var(--ink-2);font-size:15.5px}
+  .privacy-note{margin-top:26px;color:var(--ink-2);font-size:14px;max-width:100ch}
+  .privacy-note a{color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px}
+  .mobile-band{background:var(--accent-soft);border-top:1px solid var(--accent-line)}
+  .mobile-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}
+  .mobile-copy h2{margin-top:16px}
+  .mobile-copy .lede{margin-top:20px;font-size:17px}
+  .mobile-security{border-left:2px solid var(--accent);padding-left:18px;margin-top:28px}
+  .mobile-security h3{font-size:18px;line-height:1.4}
+  .mobile-security p{margin-top:8px;color:var(--ink-2);font-size:15px}
+  .mobile-status{margin:28px 0 12px;font-size:13px;font-weight:500;color:var(--accent-ink)}
+  .mobile-note{margin-top:16px;color:var(--ink-2);font-size:13px;max-width:64ch}
+  .mobile-shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+  .mobile-shots figure{margin:0;min-width:0}
+  .mobile-shots figure:nth-child(2){margin-top:60px}
+  .mobile-shots img{width:100%;border:1px solid var(--accent-line);border-radius:24px;box-shadow:var(--shadow)}
+  .mobile-shots figcaption{font-size:13px;color:var(--ink-2);margin-top:16px;text-align:center}
+  @media(max-width:920px){.privacy-grid{grid-template-columns:1fr;gap:22px}.mobile-grid{grid-template-columns:1fr;gap:40px}.mobile-shots{max-width:540px;width:100%;margin:auto}}
+  @media(max-width:520px){.mobile-shots{gap:12px}.mobile-shots img{border-radius:16px}.mobile-shots figure:nth-child(2){margin-top:30px}}
 </style>
 </head>
 <body>
@@ -271,9 +300,9 @@
     </a>
     <nav class="nav-links">
       <a href="#features" data-t="nav.features">Features</a>
-      <a href="#work" data-t="nav.work">In practice</a>
+      <a href="#local" data-t="nav.local">Privacy &amp; control</a>
+      <a href="#mobile" data-t="nav.mobile">Mobile</a>
       <a href="#model" data-t="nav.model">Model access</a>
-      <a href="https://github.com/coworkagent/cowork-releases" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="nav-cta">
       <button class="lang" id="lang" type="button">中文</button>
@@ -288,14 +317,14 @@
     <div class="hero-glow"></div><div class="hero-glow2"></div>
     <div class="wrap hero-grid">
       <div>
-        <span class="kicker reveal" data-t="hero.kicker">Local-first desktop agent</span>
-        <h1 class="reveal" data-d="1" data-t="hero.title">An AI agent that <em>does the work</em>.</h1>
-        <p class="lede reveal" data-d="2" data-t="hero.sub">It edits files, runs commands, drives your browser and other apps, and writes documents. All on your own machine, with every risky action behind your approval.</p>
+        <span class="kicker reveal" data-t="hero.kicker">Local work. Your models. Encrypted connections.</span>
+        <h1 class="reveal" data-d="1" data-t="hero.title">Work stays local.<br><em>Control stays with you.</em></h1>
+        <p class="lede reveal" data-d="2" data-t="hero.sub">Cowork works with files, conversations and tasks on your own computer, without hosting your work in a Cowork cloud. Put AI to work on documents, code and everyday tasks, then stay connected from your phone.</p>
         <div class="hero-actions reveal" data-d="3">
-          <a class="btn btn-primary btn-lg" href="download/" data-t="hero.cta1">Download</a>
-          <a class="btn btn-ghost btn-lg" href="https://github.com/coworkagent/cowork-releases/releases" target="_blank" rel="noopener" data-t="hero.cta2">All releases</a>
+          <a class="btn btn-primary btn-lg" href="download/" data-t="hero.cta1">Download for desktop</a>
+          <a class="btn btn-ghost btn-lg" href="#mobile" data-t="hero.cta2">Meet Cowork for mobile</a>
         </div>
-        <p class="hero-note reveal" data-d="3" data-t="hero.note">Free, for macOS and Windows. The macOS builds are signed and notarized.</p>
+        <p class="hero-note reveal" data-d="3" data-t="hero.note">Free for macOS and Windows. iPhone and iPad app submitted to App Store review.</p>
       </div>
       <div class="hero-media reveal from-right" data-d="2">
         <div class="shot tilt" data-tilt="2.5"><img src="assets/hero.png" width="2000" height="1250" alt="cowork after adding a --json flag to a command-line tool: the conversation on the left, the review panel with the diff on the right" /></div>
@@ -303,12 +332,18 @@
     </div>
   </section>
 
-  <section class="band">
+  <section class="band" id="local">
     <div class="wrap">
       <div class="statement reveal">
-        <h2 data-t="intro.title">A coding agent's loop, out of the terminal and onto the whole machine.</h2>
-        <p class="lede" data-t="intro.body">cowork brings an agent loop onto the desktop, then hands it the rest of the machine: a browser it drives, control of your other apps, document generation, a sandbox around its commands, and memory that lasts across sessions. It speaks protocols, not vendors, so any OpenAI-compatible or Anthropic-style endpoint works.</p>
+        <h2 data-t="intro.title">Your computer is where the work lives.</h2>
+        <p class="lede" data-t="intro.body">Conversations, project files and work history are stored locally. Cowork does not provide cloud storage for your sessions or files. You choose the model services and tools that receive content when a task needs them.</p>
       </div>
+      <div class="privacy-grid reveal">
+        <div><h3 data-t="privacy.local.t">Stored on your computer</h3><p data-t="privacy.local.b">Work directly in your own folders. Read results, inspect changes and keep the files you create on your computer.</p></div>
+        <div><h3 data-t="privacy.model.t">Choose where AI runs</h3><p data-t="privacy.model.b">Use a local model for local inference. If you choose a cloud model or an online tool, it receives the content needed for that request under its own policy.</p></div>
+        <div><h3 data-t="privacy.control.t">Access you can control</h3><p data-t="privacy.control.b">Pair a phone explicitly, then decide which projects it can access and what it may do. Device access can be revoked from the computer.</p></div>
+      </div>
+      <p class="privacy-note reveal"><span data-t="privacy.note">Updates, downloads and website visits involve connection metadata. Desktop update checks also send a random installation identifier and app version, without conversation or file content.</span> <a href="/mobile/privacy/" data-local data-t="privacy.link">Read the privacy policy</a></p>
       <div class="duo">
         <div class="duo-card reveal" data-d="1">
           <span class="eyebrow" data-t="duo.c.k">For code</span>
@@ -322,6 +357,29 @@
           <p data-t="duo.o.b">Reports, workbooks, and decks are read and written as real Office files, with no Office install. Older binary formats are read too, and PDFs, CSVs, and images open in the same viewer.</p>
           <div class="chips"><span class="chip">.docx</span><span class="chip">.xlsx</span><span class="chip">.pptx</span><span class="chip">.doc</span><span class="chip">.xls</span><span class="chip">.ppt</span><span class="chip">.pdf</span><span class="chip">.csv</span><span class="chip">.md</span></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band mobile-band" id="mobile">
+    <div class="wrap mobile-grid">
+      <div class="mobile-copy reveal">
+        <span class="kicker" data-t="mobile.kicker">Cowork Agent · iPhone &amp; iPad</span>
+        <h2 class="h2" data-t="mobile.title">Keep your desktop work close.</h2>
+        <p class="lede" data-t="mobile.body">Continue conversations, follow tasks, handle approvals and read authorized files from your phone or tablet. Your computer keeps running the tasks; the app gives you a way to stay involved.</p>
+        <div class="mobile-security"><h3 data-t="mobile.encrypted.t">Encrypted from phone to computer</h3><p data-t="mobile.encrypted.b">TLS encryption and certificate verification protect the connection to your paired computer. With a configured relay, conversation and file contents remain inside that encrypted connection; the relay forwards ciphertext.</p></div>
+        <ul class="mini">
+          <li data-i="check"><span data-t="mobile.permissions">Pair first. Grant access on the computer. Revoke it when needed.</span></li>
+          <li data-i="check"><span data-t="mobile.connection">Connect over your local network or a relay you or your administrator configure.</span></li>
+          <li data-i="check"><span data-t="mobile.consent">Review sharing before sending new task content; withdraw permission in Settings.</span></li>
+        </ul>
+        <p class="mobile-status" data-t="mobile.status">Submitted to App Store review · Not yet publicly available</p>
+        <a class="btn btn-ghost" href="/mobile/help/" data-local data-t="mobile.guide">See the mobile setup guide</a>
+        <p class="mobile-note" data-t="mobile.note">Requires a compatible computer, configured model service and device pairing. Keep the computer awake and online. Relay access requires iOS/iPadOS 17 or later; relay operators can observe connection metadata.</p>
+      </div>
+      <div class="mobile-shots reveal" data-d="1">
+        <figure><img src="assets/mobile-conversation-en.jpg" width="1320" height="2868" loading="lazy" data-mobile-scene="conversation" data-alt="mobile.image.conversation" alt="Cowork Agent on iPhone showing a project planning conversation with sample content" /><figcaption data-t="mobile.conversation">Continue a conversation</figcaption></figure>
+        <figure><img src="assets/mobile-approval-en.jpg" width="1320" height="2868" loading="lazy" data-mobile-scene="approval" data-alt="mobile.image.approval" alt="Cowork Agent on iPhone showing a request to save a sample project plan, with Allow once and Deny actions" /><figcaption data-t="mobile.approval">Handle the next decision</figcaption></figure>
       </div>
     </div>
   </section>
@@ -461,8 +519,8 @@ print(summary)   <b>// only this returns</b></pre></div>
     <div class="wrap model-grid">
       <div class="reveal">
         <span class="kicker" data-t="model.k">Model access</span>
-        <h2 class="h2" style="margin-top:14px" data-t="model.title">Not tied to any vendor.</h2>
-        <p class="lede" style="margin-top:16px" data-t="model.body">The app speaks protocols, not services. Switching backends is a change of URL, no code. Hosted service, gateway, or a local model on your own box all work the same way. There is no built-in model list on purpose, so nothing goes stale.</p>
+        <h2 class="h2" style="margin-top:14px" data-t="model.title">Your model. Your destination.</h2>
+        <p class="lede" style="margin-top:16px" data-t="model.body">Connect a compatible local model for local inference, or choose a cloud service when you need it. Cowork sends model requests to the endpoint you configure. Cloud services receive the prompts, context and attachments needed for those requests and may charge separately.</p>
         <div class="fields">
           <span class="field" data-t="model.f1">Protocol</span>
           <span class="field" data-t="model.f2">Base URL</span>
@@ -479,13 +537,13 @@ print(summary)   <b>// only this returns</b></pre></div>
 
   <section class="cta">
     <div class="wrap reveal">
-      <h2 data-t="cta.title">Give the agent the whole machine.</h2>
-      <p data-t="cta.sub">Free. Bring your own model. Every consequential action stays behind your approval.</p>
+      <h2 data-t="cta.title">Make your computer your AI workspace.</h2>
+      <p data-t="cta.sub">Free to use. Keep your work locally, choose your model, and configure the access you grant.</p>
       <div class="cta-actions">
         <a class="btn btn-primary btn-lg" href="download/" data-t="cta.dl">Download</a>
         <a class="btn btn-ghost btn-lg" href="https://github.com/coworkagent/cowork-releases/releases" target="_blank" rel="noopener" data-t="cta.src">All releases</a>
       </div>
-      <div class="plats"><span>macOS</span><span>Windows</span><span>Linux</span></div>
+      <div class="plats"><span>macOS</span><span>Windows</span></div>
     </div>
   </section>
 </main>
@@ -493,7 +551,7 @@ print(summary)   <b>// only this returns</b></pre></div>
 <footer>
   <div class="wrap foot">
     <span class="brand"><svg viewBox="0 0 128 128" width="20" height="20" aria-hidden="true" style="border-radius:6px"><rect width="128" height="128" rx="28" fill="#2b7cb8"/><path d="M74 40 A28 28 0 1 0 74 88" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M62 56 L70 88 L84 64 L98 88 L106 56" fill="none" stroke="#0b2a3f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>cowork</span>
-    <span data-t="foot.tag" style="color:var(--ink-3)">A local-first desktop AI agent.</span>
+    <span data-t="foot.tag" style="color:var(--ink-3)">Local work. Your models. Encrypted mobile access.</span>
     <div class="foot-links">
       <a href="/mobile/privacy/" data-t="foot.privacy">Privacy policy</a>
       <a href="/mobile/support/" data-t="foot.support">Support</a>
@@ -512,13 +570,13 @@ print(summary)   <b>// only this returns</b></pre></div>
 
   var T = {
     'nav.features':['Features','功能'],'nav.work':['In practice','实际用起来'],'nav.model':['Model access','接入模型'],'nav.download':['Download','下载'],
-    'hero.kicker':['Local-first desktop agent','跑在你自己电脑上的 AI Agent'],
-    'hero.title':['An AI agent that <em>does the work</em>.','不光会说，<br><em>还真的动手干活</em>。'],
-    'hero.sub':['It edits files, runs commands, drives your browser and other apps, and writes documents. All on your own machine, with every risky action behind your approval.','改文件、跑命令、操作浏览器和别的应用、写文档，全都在你自己的电脑上完成。有风险的操作，都会先问过你。'],
-    'hero.cta1':['Download','下载'],'hero.cta2':['All releases','全部版本'],
-    'hero.note':['Free, for macOS and Windows. The macOS builds are signed and notarized.','免费使用，支持 macOS 和 Windows。macOS 版已经过 Apple 签名和公证。'],
-    'intro.title':["A coding agent's loop, out of the terminal and onto the whole machine.",'以前只待在终端里的 Agent，现在能用你的整台电脑了。'],
-    'intro.body':['cowork brings an agent loop onto the desktop, then hands it the rest of the machine: a browser it drives, control of your other apps, document generation, a sandbox around its commands, and memory that lasts across sessions. It speaks protocols, not vendors, so any OpenAI-compatible or Anthropic-style endpoint works.','cowork 把 Agent 搬到了桌面上，再把电脑交给它用：它能自己开浏览器、操作别的应用、生成文档，命令跑在沙箱里，还能跨会话记住你的习惯。模型随你选，只要是 OpenAI 兼容或 Anthropic 风格的接口都能接。'],
+    'hero.kicker':["Local work. Your models. Encrypted connections.", "本地运行 · 自选模型 · 加密连接"],
+    'hero.title':["Work stays local.<br><em>Control stays with you.</em>", "工作在本地，<br><em>掌控在你手中。</em>"],
+    'hero.sub':["Cowork works with files, conversations and tasks on your own computer, without hosting your work in a Cowork cloud. Put AI to work on documents, code and everyday tasks, then stay connected from your phone.", "文件、会话和任务在自己的电脑上管理，不托管到 Cowork 云端。让 AI 处理文档、代码和日常事务，再从手机继续跟进。"],
+    'hero.cta1':["Download for desktop", "下载桌面版"],'hero.cta2':["Meet Cowork for mobile", "了解手机端"],
+    'hero.note':["Free for macOS and Windows. iPhone and iPad app submitted to App Store review.", "macOS 和 Windows 免费使用。iPhone／iPad 应用已提交 App Store 审核。"],
+    'intro.title':["Your computer is where the work lives.", "自己的电脑，就是工作的中心。"],
+    'intro.body':["Conversations, project files and work history are stored locally. Cowork does not provide cloud storage for your sessions or files. You choose the model services and tools that receive content when a task needs them.", "会话、项目文件和工作记录保存在本地。Cowork 不提供会话或文件的云端托管；执行任务需要调用哪些模型和工具，由你选择和配置。"],
     'safe.title':['It acts. You approve.','它来动手，你来拍板。'],
     'safe.body':['Every write, command, and external tool call is risk-classified and gated. You decide at the moment that carries information, and what you grant stays visible and revocable.','每次写文件、跑命令、调用外部工具，都会先按风险分级，该问的停下来问你。你只在真正需要判断的时候做决定，给出去的权限随时能看到、随时能收回。'],
     'safe.t1':['Allow','允许'],'safe.t2':['This session','本次会话'],'safe.t3':['Always','一直允许'],'safe.t4':['Deny','拒绝'],
@@ -564,16 +622,43 @@ print(summary)   <b>// only this returns</b></pre></div>
     'b4.t':['Parallel and delegated','同时做，分头做'],'b4.b':['Independent tool calls run at once; sub-agents take isolated side quests and return only the conclusion.','互不相干的工具调用会同时进行；支线任务交给子 Agent 单独去跑，只把结论带回来。'],
     'b5.t':['Project memory, skills, MCP','项目记忆、技能和 MCP'],'b5.b':['It learns your conventions across sessions. Agent Skills and Model Context Protocol servers extend what it can do.','你定过的规矩，换个会话它也记得。还可以用 Agent Skills 和 MCP 服务器给它加新本事。'],
     'b6.t':['Light, dark, and three more themes','浅色、深色，另有三套主题'],'b6.b':['A high-density desktop tool that follows your system.','信息密度高的桌面工具，外观跟随系统设置。'],
-    'model.k':['Model access','接入模型'],'model.title':['Not tied to any vendor.','用哪家的模型，你说了算。'],
-    'model.body':['The app speaks protocols, not services. Switching backends is a change of URL, no code. Hosted service, gateway, or a local model on your own box all work the same way. There is no built-in model list on purpose, so nothing goes stale.','cowork 对接的是通用接口，而不是某一家的服务。换模型只需要换一个地址，别的都不用动。云端服务、各种网关，或者跑在你本机上的模型，用起来没有区别。我们特意没有内置模型列表，这样就不存在过时的问题。'],
+    'model.k':['Model access','接入模型'],'model.title':["Your model. Your destination.", "模型和数据去向，都由你选择。"],
+    'model.body':["Connect a compatible local model for local inference, or choose a cloud service when you need it. Cowork sends model requests to the endpoint you configure. Cloud services receive the prompts, context and attachments needed for those requests and may charge separately.", "可接入兼容的本地模型，在本地完成推理；也可按需选择云端服务。Cowork 将模型请求发送到你配置的地址。云端服务会接收请求所需的提示词、上下文和附件，并可能单独收费。"],
     'model.f1':['Protocol','接口类型'],'model.f2':['Base URL','接口地址'],'model.f3':['API key','API Key'],'model.f4':['Model name','模型名称'],
     'model.p1':['Widest coverage. Most hosted services, gateways, and local servers such as llama.cpp, vLLM, Ollama, and LM Studio expose a compatible endpoint.','适用面最广。大多数云端服务和网关，以及 llama.cpp、vLLM、Ollama、LM Studio 这些本地服务，都提供这种接口。'],
     'model.p2':['A content-block protocol that expresses tool calls more directly.','按内容块组织的接口，工具调用表达得更直接。'],
-    'cta.title':['Give the agent the whole machine.','把电脑交给 Agent 试试。'],
-    'cta.sub':['Free. Bring your own model. Every consequential action stays behind your approval.','免费使用，模型自己选。每一个会产生后果的操作，都要你点头才会执行。'],
+    'cta.title':["Make your computer your AI workspace.", "把自己的电脑，变成 AI 工作台。"],
+    'cta.sub':["Free to use. Keep your work locally, choose your model, and configure the access you grant.", "免费使用。工作内容本地保存，模型自己选，访问权限自己定。"],
     'cta.dl':['Download','下载'],'cta.src':['All releases','全部版本'],
     'foot.privacy':['Privacy policy','隐私政策'],'foot.support':['Support','支持'],'foot.help':['Mobile guide','移动端指南'],
-    'foot.tag':['A local-first desktop AI agent.','跑在你自己电脑上的桌面 AI Agent。'],'foot.dl':['Download','下载'],'foot.docs':['Docs','文档']
+    'foot.tag':["Local work. Your models. Encrypted mobile access.", "本地工作，自选模型，手机加密连接。"],'foot.dl':['Download','下载'],'foot.docs':['Docs','文档'],
+    "nav.local":["Privacy & control", "本地与隐私"],
+    "nav.mobile":["Mobile", "手机端"],
+    "privacy.local.t":["Stored on your computer", "工作内容，本地保存"],
+    "privacy.local.b":["Work directly in your own folders. Read results, inspect changes and keep the files you create on your computer.", "直接使用自己的文件夹，查看结果、审阅改动，生成的文件也保存在自己的电脑上。"],
+    "privacy.model.t":["Choose where AI runs", "模型去向，自己选择"],
+    "privacy.model.b":["Use a local model for local inference. If you choose a cloud model or an online tool, it receives the content needed for that request under its own policy.", "选择本地模型，可在本地完成推理。使用云端模型或联网工具时，相关内容会发送到你选择的服务，并适用其数据政策。"],
+    "privacy.control.t":["Access you can control", "连接范围，由你授权"],
+    "privacy.control.b":["Pair a phone explicitly, then decide which projects it can access and what it may do. Device access can be revoked from the computer.", "手机需要先配对，再由电脑授予项目和操作权限。允许看什么、做什么，由你决定，也可从电脑撤销设备访问。"],
+    "privacy.note":["Updates, downloads and website visits involve connection metadata. Desktop update checks also send a random installation identifier and app version, without conversation or file content.", "更新、下载和网站访问涉及连接元数据；桌面更新检查还会发送随机安装标识与版本号，不包含会话或文件内容。"],
+    "privacy.link":["Read the privacy policy", "查看隐私政策"],
+    "mobile.kicker":["Cowork Agent · iPhone & iPad", "Cowork Agent · iPhone 与 iPad"],
+    "mobile.title":["Keep your desktop work close.", "离开电脑，工作仍在手边。"],
+    "mobile.body":["Continue conversations, follow tasks, handle approvals and read authorized files from your phone or tablet. Your computer keeps running the tasks; the app gives you a way to stay involved.", "用手机或平板继续会话、跟进任务、处理批准，并查看获授权的文件。任务仍由自己的电脑执行，你可以随时接着处理。"],
+    "mobile.encrypted.t":["Encrypted from phone to computer", "手机与电脑之间，加密传输"],
+    "mobile.encrypted.b":["TLS encryption and certificate verification protect the connection to your paired computer. With a configured relay, conversation and file contents remain inside that encrypted connection; the relay forwards ciphertext.", "手机与已配对电脑之间使用 TLS 加密并校验证书。使用已配置的中继时，会话和文件内容仍在这条加密连接内，中继转发的是加密业务流量。"],
+    "mobile.permissions":["Pair first. Grant access on the computer. Revoke it when needed.", "先配对，再在电脑确认权限；需要时可撤销访问。"],
+    "mobile.connection":["Connect over your local network or a relay you or your administrator configure.", "支持局域网直连，也可使用你或管理员配置的中继。"],
+    "mobile.consent":["Review sharing before sending new task content; withdraw permission in Settings.", "发送新任务内容前确认数据共享，也可在设置中撤回同意。"],
+    "mobile.status":["Submitted to App Store review · Not yet publicly available", "已提交 App Store 审核 · 尚未正式上架"],
+    "mobile.guide":["See the mobile setup guide", "查看手机端连接指南"],
+    "mobile.note":["Requires a compatible computer, configured model service and device pairing. Keep the computer awake and online. Relay access requires iOS/iPadOS 17 or later; relay operators can observe connection metadata.", "需配合兼容电脑、已配置的模型服务和设备配对使用，电脑需保持唤醒并联网。中继连接要求 iOS／iPadOS 17 及以上；中继运营方可见连接元数据。"],
+    "mobile.conversation":["Continue a conversation", "继续电脑上的会话"],
+    "mobile.approval":["Handle the next decision", "处理需要你确认的操作"],
+    "mobile.image.conversation":["Cowork Agent on iPhone showing a project planning conversation with sample content", "Cowork Agent iPhone 界面：使用示例内容展示项目规划会话"],
+    "mobile.image.approval":["Cowork Agent on iPhone showing a request to save a sample project plan, with Allow once and Deny actions", "Cowork Agent iPhone 界面：保存示例项目计划的批准请求，可允许一次或拒绝"],
+    "meta.title":["Cowork — Local work. Your models. Encrypted mobile access.", "Cowork — 本地工作，自选模型，手机加密连接"],
+    "meta.description":["A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. iOS app submitted for review.", "Cowork 在自己的电脑上处理文件、代码和日常任务，工作内容不托管到 Cowork 云端。自选本地或云端模型，手机通过加密连接继续电脑上的工作。iOS 应用已提交审核。"],
   };
   var HTML_KEYS = {'hero.title':1};
   function apply(lang){
@@ -581,6 +666,13 @@ print(summary)   <b>// only this returns</b></pre></div>
     document.documentElement.lang = lang==='zh'?'zh-CN':'en';
     document.querySelectorAll('[data-t]').forEach(function(el){ var v = T[el.getAttribute('data-t')]; if(!v) return; if(HTML_KEYS[el.getAttribute('data-t')]) el.innerHTML = v[i]; else el.textContent = v[i]; });
     document.getElementById('lang').textContent = lang==='zh'?'EN':'中文';
+    document.title = T['meta.title'][i];
+    document.querySelector('meta[name="description"]').content = T['meta.description'][i];
+    document.querySelector('meta[property="og:title"]').content = T['meta.title'][i];
+    document.querySelector('meta[property="og:description"]').content = T['meta.description'][i];
+    document.querySelectorAll('[data-mobile-scene]').forEach(function(el){ el.src = 'assets/mobile-' + el.getAttribute('data-mobile-scene') + '-' + lang + '.jpg'; });
+    document.querySelectorAll('[data-alt]').forEach(function(el){ el.alt = T[el.getAttribute('data-alt')][i]; });
+    document.querySelectorAll('a[data-local]').forEach(function(el){ var url = new URL(el.getAttribute('href'), location.href); url.searchParams.set('lang', lang); el.href = url.pathname + url.search; });
     try{ localStorage.setItem('cowork-lang', lang); }catch(e){}
   }
   var saved; try{ saved = localStorage.getItem('cowork-lang'); }catch(e){}
