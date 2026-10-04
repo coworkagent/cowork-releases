@@ -48,7 +48,7 @@
 </section>
 <section>
 <h2>Information stored on your device</h2>
-<p>The app keeps pairing credentials, computer trust information, drafts and records needed to reconcile pending actions in device-only secure storage. Language preferences are also saved locally. Received session content is held in memory for display. Files you explicitly preview, export or share can create local temporary copies. The app keeps at most three shared temporary files, up to 10 MiB each. Copies saved to another app or Files are controlled by you and that destination.</p>
+<p>The app keeps pairing credentials, computer trust information, drafts and records needed to reconcile pending actions in device-only secure storage. Language preferences are also saved locally. Before build 38, received session content is held in memory for display. Starting with build 38, the app also caches loaded conversation text, images, attachments and workspace file previews on this device. The shared cache is encrypted with a key held in device-only secure storage, limited to 2 GiB (2,147,483,648 bytes), and expires 60 days after each entry is written. Expired entries are removed when the app next reads or maintains the cache; cleanup cannot run while the app is inactive. Capacity limits can remove older entries sooner; iOS can also purge this cache. Only content already loaded is cached, within the app’s existing file-size and preview limits. Reopening a conversation first displays eligible cached history and then synchronizes current content. Cached data remains scoped to its paired computer and current access; opening attachments and workspace files checks current authorization and file metadata. Files you explicitly preview, export or share can create local temporary copies. The app keeps at most three shared temporary files, up to 10 MiB each. Copies saved to another app or Files are controlled by you and that destination.</p>
 </section>
 <section>
 <h2>Permissions you control</h2>
@@ -69,7 +69,7 @@
 </section>
 <section>
 <h2>Remove data and revoke access</h2>
-<p>Use Computers &amp; connections to clear temporary shared files or remove a paired computer and its associated local state. Also revoke the mobile device in desktop Cowork to invalidate its access there. Temporary exports are cleared on app initialization and when a computer is removed. Device-only Keychain records can survive an app uninstall, so remove pairings in the app before uninstalling. Removing a pairing does not delete conversations or files on the computer, or copies already sent to a model provider or another app; manage those at the destination.</p>
+<p>Starting with build 38, Settings shows local cache usage and lets you clear cached conversations, images and files without removing pairings or drafts. Removing a paired computer also clears the shared content cache. Use Computers &amp; connections to clear temporary shared files or remove a paired computer and its associated local state. Also revoke the mobile device in desktop Cowork to invalidate its access there. Temporary exports are cleared on app initialization and when a computer is removed. Device-only Keychain records can survive an app uninstall, so remove pairings in the app before uninstalling. Removing a pairing does not delete conversations or files on the computer, or copies already sent to a model provider or another app; manage those at the destination.</p>
 </section>
 <section>
 <h2>Your requests and policy updates</h2>
@@ -95,7 +95,7 @@
 </section>
 <section>
 <h2>设备上保存的信息</h2>
-<p>App 将配对凭据、电脑信任信息、草稿及核对待处理操作所需的记录保存在仅限本设备的安全存储中。语言偏好也保存在本地。接收的会话内容保留在内存中用于显示。主动预览、导出或分享文件时可能产生本地临时副本。App 最多保留三个分享临时文件，每个不超过 10 MiB。保存到其他 App 或“文件”的副本由你和相应应用管理。</p>
+<p>App 将配对凭据、电脑信任信息、草稿及核对待处理操作所需的记录保存在仅限本设备的安全存储中。语言偏好也保存在本地。build 38 之前，接收的会话内容保留在内存中用于显示。从 build 38 起，App 还会在本设备缓存已加载的聊天文字、图片、附件和工作区文件预览。它们共用一个加密缓存，密钥保存在仅限本设备的安全存储中，总容量上限为 2 GiB（2,147,483,648 字节），每项自写入起 60 天到期。过期条目会在 App 下次读取或维护缓存时清理；App 未运行时无法执行清理。达到容量上限时可能提前清理较旧条目，iOS 也可能清理缓存。仅缓存已经加载的内容，并仍受 App 现有文件大小与预览限制。再次进入会话时先显示符合条件的缓存历史，再同步最新内容。缓存按配对电脑及当前访问权限隔离；打开附件和工作区文件时会检查当前授权及文件信息。主动预览、导出或分享文件时可能产生本地临时副本。App 最多保留三个分享临时文件，每个不超过 10 MiB。保存到其他 App 或“文件”的副本由你和相应应用管理。</p>
 </section>
 <section>
 <h2>你可以控制的权限</h2>
@@ -116,7 +116,7 @@
 </section>
 <section>
 <h2>删除数据与撤销访问</h2>
-<p>在“电脑与连接”中可以清除分享临时文件，或移除配对电脑及相关本地状态。还应在桌面版 Cowork 中撤销移动设备，从电脑端使访问权限失效。App 初始化及移除电脑时会清理临时导出文件。仅限本设备的钥匙串记录可能在卸载 App 后保留，因此建议先在 App 中移除配对再卸载。移除配对不会删除电脑上的会话和文件，也不会删除已发送至模型服务或其他 App 的副本；这些数据需要在对应位置管理。</p>
+<p>从 build 38 起，设置会显示本地缓存用量，你可以清除已缓存的会话、图片和文件，同时保留配对与草稿。移除配对电脑也会清除共享内容缓存。在“电脑与连接”中可以清除分享临时文件，或移除配对电脑及相关本地状态。还应在桌面版 Cowork 中撤销移动设备，从电脑端使访问权限失效。App 初始化及移除电脑时会清理临时导出文件。仅限本设备的钥匙串记录可能在卸载 App 后保留，因此建议先在 App 中移除配对再卸载。移除配对不会删除电脑上的会话和文件，也不会删除已发送至模型服务或其他 App 的副本；这些数据需要在对应位置管理。</p>
 </section>
 <section>
 <h2>你的请求与政策更新</h2>
