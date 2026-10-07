@@ -33,7 +33,7 @@
 <div class="kicker">Cowork Agent · iPhone &amp; iPad</div>
 <h1>Privacy policy</h1>
 <p class="lead">How Cowork Agent handles your information, and how desktop Cowork and this website fit in.</p>
-<p class="date">Effective October 4, 2026</p>
+<p class="date">Effective October 7, 2026</p>
 <section>
 <h2>Scope and contact</h2>
 <p>This policy covers the Cowork Agent iPhone and iPad app, maintained by the Cowork project. Desktop and website processing is described separately below. For privacy questions or requests, use our support page.</p>
@@ -48,7 +48,7 @@
 </section>
 <section>
 <h2>Information stored on your device</h2>
-<p>The app keeps pairing credentials, computer trust information, drafts and records needed to reconcile pending actions in device-only secure storage. Language preferences are also saved locally. Before build 38, received session content is held in memory for display. Starting with build 38, the app also caches loaded conversation text, images, attachments and workspace file previews on this device. The shared cache is encrypted with a key held in device-only secure storage, limited to 2 GiB (2,147,483,648 bytes), and expires 60 days after each entry is written. Expired entries are removed when the app next reads or maintains the cache; cleanup cannot run while the app is inactive. Capacity limits can remove older entries sooner; iOS can also purge this cache. Only content already loaded is cached, within the app’s existing file-size and preview limits. Reopening a conversation first displays eligible cached history and then synchronizes current content. Cached data remains scoped to its paired computer and current access; opening attachments and workspace files checks current authorization and file metadata. Files you explicitly preview, export or share can create local temporary copies. The app keeps at most three shared temporary files, up to 10 MiB each. Copies saved to another app or Files are controlled by you and that destination.</p>
+<p>The app keeps pairing credentials, computer trust information and records needed to reconcile pending actions in device-only secure storage. Earlier builds also keep drafts there. Starting with build 39, complete drafts are encrypted in the app’s private document files, with their key and file pointers in device-only secure storage. Existing drafts are migrated only after the encrypted copy is saved. Drafts are not subject to the shared cache’s expiry or eviction policy. Language preferences are also saved locally. Before build 38, received session content is held in memory for display. Starting with build 38, the app also caches loaded conversation text, images, attachments and workspace file previews on this device. The shared cache is encrypted with a key held in device-only secure storage, limited to 2 GiB (2,147,483,648 bytes), and expires 60 days after each entry is written. Expired entries are removed when the app next reads or maintains the cache; cleanup cannot run while the app is inactive. Capacity limits can remove older entries sooner; iOS can also purge this cache. Only content already loaded is cached, within the app’s existing file-size and preview limits. Reopening a conversation first displays eligible cached history and then synchronizes current content. Cached data remains scoped to its paired computer and current access; opening attachments and workspace files checks current authorization and file metadata. Files you explicitly preview, export or share can create local temporary copies. Before build 39, the app keeps at most three shared temporary files. Starting with build 39, there is no cumulative file-count ceiling, and identical exports reuse an existing file. Each file remains limited to 10 MiB; use the app’s clear control to remove temporary exports. Copies saved to another app or Files are controlled by you and that destination.</p>
 </section>
 <section>
 <h2>Permissions you control</h2>
@@ -80,7 +80,7 @@
 <div class="kicker">Cowork Agent · iPhone &amp; iPad</div>
 <h1>隐私政策</h1>
 <p class="lead">说明 Cowork Agent 如何处理信息，以及桌面版 Cowork 和本网站涉及的数据。</p>
-<p class="date">生效日期：2026 年 10 月 4 日</p>
+<p class="date">生效日期：2026 年 10 月 7 日</p>
 <section>
 <h2>适用范围与联系</h2>
 <p>本政策适用于 Cowork 项目维护的 iPhone 和 iPad 应用 Cowork Agent。下文单独说明桌面端与网站的数据处理。如需咨询隐私或提出请求，请通过支持页面联系我们。</p>
@@ -95,7 +95,7 @@
 </section>
 <section>
 <h2>设备上保存的信息</h2>
-<p>App 将配对凭据、电脑信任信息、草稿及核对待处理操作所需的记录保存在仅限本设备的安全存储中。语言偏好也保存在本地。build 38 之前，接收的会话内容保留在内存中用于显示。从 build 38 起，App 还会在本设备缓存已加载的聊天文字、图片、附件和工作区文件预览。它们共用一个加密缓存，密钥保存在仅限本设备的安全存储中，总容量上限为 2 GiB（2,147,483,648 字节），每项自写入起 60 天到期。过期条目会在 App 下次读取或维护缓存时清理；App 未运行时无法执行清理。达到容量上限时可能提前清理较旧条目，iOS 也可能清理缓存。仅缓存已经加载的内容，并仍受 App 现有文件大小与预览限制。再次进入会话时先显示符合条件的缓存历史，再同步最新内容。缓存按配对电脑及当前访问权限隔离；打开附件和工作区文件时会检查当前授权及文件信息。主动预览、导出或分享文件时可能产生本地临时副本。App 最多保留三个分享临时文件，每个不超过 10 MiB。保存到其他 App 或“文件”的副本由你和相应应用管理。</p>
+<p>App 将配对凭据、电脑信任信息及核对待处理操作所需的记录保存在仅限本设备的安全存储中。早期版本也将草稿保存在其中。从 build 39 起，完整草稿加密保存在 App 私有文档文件中，密钥和文件指针保存在仅限本设备的安全存储中。只有新密文保存成功后才迁移旧草稿。草稿不受共享缓存的到期或淘汰策略影响。语言偏好也保存在本地。build 38 之前，接收的会话内容保留在内存中用于显示。从 build 38 起，App 还会在本设备缓存已加载的聊天文字、图片、附件和工作区文件预览。它们共用一个加密缓存，密钥保存在仅限本设备的安全存储中，总容量上限为 2 GiB（2,147,483,648 字节），每项自写入起 60 天到期。过期条目会在 App 下次读取或维护缓存时清理；App 未运行时无法执行清理。达到容量上限时可能提前清理较旧条目，iOS 也可能清理缓存。仅缓存已经加载的内容，并仍受 App 现有文件大小与预览限制。再次进入会话时先显示符合条件的缓存历史，再同步最新内容。缓存按配对电脑及当前访问权限隔离；打开附件和工作区文件时会检查当前授权及文件信息。主动预览、导出或分享文件时可能产生本地临时副本。build 39 之前，App 最多保留三个分享临时文件。从 build 39 起不再限制累计文件数量，相同内容的导出会复用现有文件。每个文件仍不超过 10 MiB，可使用 App 中的清除功能删除临时导出文件。保存到其他 App 或“文件”的副本由你和相应应用管理。</p>
 </section>
 <section>
 <h2>你可以控制的权限</h2>
