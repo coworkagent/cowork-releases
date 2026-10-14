@@ -15,6 +15,8 @@ This repository hosts the installers, the update feed, and the [website](https:/
 
 The `.zip`, `.blockmap` and `latest*.yml` files are used by the in-app updater. You do not need to download them.
 
+The automatically generated **Source code** archives contain this distribution website, not the desktop application source. Remote-control component binaries are excluded from these archives.
+
 ## Installing
 
 **macOS.** Open the `.dmg` and drag cowork to Applications. The builds are signed with a Developer ID and notarised by Apple, so they open without a warning. macOS 13 or later.
