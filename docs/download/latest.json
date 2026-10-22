@@ -1,26 +1,26 @@
 {
-  "version": "0.22.2",
-  "published": "2026-10-21T22:34:17Z",
+  "version": "0.22.3",
+  "published": "2026-10-22T07:59:06Z",
   "assets": [
     {
-      "name": "cowork-0.22.2-mac-arm64.dmg",
-      "size": 342430275,
-      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.2/cowork-0.22.2-mac-arm64.dmg"
+      "name": "cowork-0.22.3-mac-arm64.dmg",
+      "size": 343469365,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.3/cowork-0.22.3-mac-arm64.dmg"
     },
     {
-      "name": "cowork-0.22.2-mac-x64.dmg",
-      "size": 353359123,
-      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.2/cowork-0.22.2-mac-x64.dmg"
+      "name": "cowork-0.22.3-mac-x64.dmg",
+      "size": 354452283,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.3/cowork-0.22.3-mac-x64.dmg"
     },
     {
-      "name": "cowork-0.22.2-win-arm64-setup.exe",
-      "size": 263014780,
-      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.2/cowork-0.22.2-win-arm64-setup.exe"
+      "name": "cowork-0.22.3-win-arm64-setup.exe",
+      "size": 263137431,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.3/cowork-0.22.3-win-arm64-setup.exe"
     },
     {
-      "name": "cowork-0.22.2-win-x64-setup.exe",
-      "size": 276314924,
-      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.2/cowork-0.22.2-win-x64-setup.exe"
+      "name": "cowork-0.22.3-win-x64-setup.exe",
+      "size": 276438998,
+      "url": "https://github.com/coworkagent/cowork-releases/releases/download/v0.22.3/cowork-0.22.3-win-x64-setup.exe"
     }
   ]
 }
