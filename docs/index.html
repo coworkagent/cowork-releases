@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light" />
 <title>Cowork — Local work. Your models. Encrypted mobile access.</title>
-<meta name="description" content="A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. iOS app submitted for review." />
+<meta name="description" content="A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. Available on the App Store for iPhone and iPad." />
 <link rel="canonical" href="https://coworkagent.top/" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://coworkagent.top/" />
 <meta property="og:title" content="Cowork — Local work. Your models. Encrypted mobile access." />
-<meta property="og:description" content="A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. iOS app submitted for review." />
+<meta property="og:description" content="A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. Available on the App Store for iPhone and iPad." />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%232b7cb8'/%3E%3Cpath d='M74 40 A28 28 0 1 0 74 88' fill='none' stroke='%23fff' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M62 56 L70 88 L84 64 L98 88 L106 56' fill='none' stroke='%230b2a3f' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 
 <style>
@@ -278,6 +278,7 @@
   .mobile-security{border-left:2px solid var(--accent);padding-left:18px;margin-top:28px}
   .mobile-security h3{font-size:18px;line-height:1.4}
   .mobile-security p{margin-top:8px;color:var(--ink-2);font-size:15px}
+  .mobile-actions{display:flex; flex-wrap:wrap; gap:12px}
   .mobile-status{margin:28px 0 12px;font-size:13px;font-weight:500;color:var(--accent-ink)}
   .mobile-note{margin-top:16px;color:var(--ink-2);font-size:13px;max-width:64ch}
   .mobile-shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
@@ -322,9 +323,9 @@
         <p class="lede reveal" data-d="2" data-t="hero.sub">Cowork works with files, conversations and tasks on your own computer, without hosting your work in a Cowork cloud. Put AI to work on documents, code and everyday tasks, then stay connected from your phone.</p>
         <div class="hero-actions reveal" data-d="3">
           <a class="btn btn-primary btn-lg" href="download/" data-t="hero.cta1">Download for desktop</a>
-          <a class="btn btn-ghost btn-lg" href="#mobile" data-t="hero.cta2">Meet Cowork for mobile</a>
+          <a class="btn btn-ghost btn-lg" href="https://apps.apple.com/us/app/cowork-agent/id6816690478" data-app-store data-t="hero.cta2">Download for iPhone & iPad</a>
         </div>
-        <p class="hero-note reveal" data-d="3" data-t="hero.note">Free for macOS and Windows. iPhone and iPad app submitted to App Store review.</p>
+        <p class="hero-note reveal" data-d="3" data-t="hero.note">Free for macOS and Windows. Also available on the App Store for iPhone and iPad.</p>
       </div>
       <div class="hero-media reveal from-right" data-d="2">
         <div class="shot tilt" data-tilt="2.5"><img src="assets/hero.png" width="2000" height="1250" alt="Cowork after adding a --json flag to a command-line tool: the conversation on the left, the review panel with the diff on the right" /></div>
@@ -373,8 +374,9 @@
           <li data-i="check"><span data-t="mobile.connection">Connect over your local network or a relay you or your administrator configure.</span></li>
           <li data-i="check"><span data-t="mobile.consent">Review sharing before sending new task content; withdraw permission in Settings.</span></li>
         </ul>
-        <p class="mobile-status" data-t="mobile.status">Submitted to App Store review · Not yet publicly available</p>
-        <a class="btn btn-ghost" href="/mobile/help/" data-local data-t="mobile.guide">See the mobile setup guide</a>
+        <p class="mobile-status" data-t="mobile.status">Available on the App Store · iOS / iPadOS 16.4+</p>
+        <div class="mobile-actions"><a class="btn btn-primary" href="https://apps.apple.com/us/app/cowork-agent/id6816690478" data-app-store data-t="mobile.download">Download on the App Store</a>
+          <a class="btn btn-ghost" href="/mobile/help/" data-local data-t="mobile.guide">See the mobile setup guide</a></div>
         <p class="mobile-note" data-t="mobile.note">Requires a compatible computer, configured model service and device pairing. Keep the computer awake and online. Relay access requires iOS/iPadOS 17 or later; relay operators can observe connection metadata.</p>
       </div>
       <div class="mobile-shots reveal" data-d="1">
@@ -563,6 +565,7 @@ print(summary)   <b>// only this returns</b></pre></div>
   </div>
 </footer>
 
+<script src="app-store.js"></script>
 <script>
 (function(){
   var CHECK = '<svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"><path d="M40 128l56 56 120-120"/></svg>';
@@ -573,8 +576,8 @@ print(summary)   <b>// only this returns</b></pre></div>
     'hero.kicker':["Local work. Your models. Encrypted connections.", "本地运行 · 自选模型 · 加密连接"],
     'hero.title':["Work stays local.<br><em>Control stays with you.</em>", "工作在本地，<br><em>掌控在你手中。</em>"],
     'hero.sub':["Cowork works with files, conversations and tasks on your own computer, without hosting your work in a Cowork cloud. Put AI to work on documents, code and everyday tasks, then stay connected from your phone.", "文件、会话和任务在自己的电脑上管理，不托管到 Cowork 云端。让 AI 处理文档、代码和日常事务，再从手机继续跟进。"],
-    'hero.cta1':["Download for desktop", "下载桌面版"],'hero.cta2':["Meet Cowork for mobile", "了解手机端"],
-    'hero.note':["Free for macOS and Windows. iPhone and iPad app submitted to App Store review.", "macOS 和 Windows 免费使用。iPhone／iPad 应用已提交 App Store 审核。"],
+    'hero.cta1':["Download for desktop", "下载桌面版"],'hero.cta2':["Download for iPhone & iPad", "下载 iPhone／iPad 版"],
+    'hero.note':["Free for macOS and Windows. Also available on the App Store for iPhone and iPad.", "macOS 和 Windows 免费使用。iPhone／iPad 版已在 App Store 上架。"],
     'intro.title':["Your computer is where the work lives.", "自己的电脑，就是工作的中心。"],
     'intro.body':["Conversations, project files and work history are stored locally. Cowork does not provide cloud storage for your sessions or files. You choose the model services and tools that receive content when a task needs them.", "会话、项目文件和工作记录保存在本地。Cowork 不提供会话或文件的云端托管；执行任务需要调用哪些模型和工具，由你选择和配置。"],
     'safe.title':['It acts. You approve.','它来动手，你来拍板。'],
@@ -650,7 +653,8 @@ print(summary)   <b>// only this returns</b></pre></div>
     "mobile.permissions":["Pair first. Grant access on the computer. Revoke it when needed.", "先配对，再在电脑确认权限；需要时可撤销访问。"],
     "mobile.connection":["Connect over your local network or a relay you or your administrator configure.", "支持局域网直连，也可使用你或管理员配置的中继。"],
     "mobile.consent":["Review sharing before sending new task content; withdraw permission in Settings.", "发送新任务内容前确认数据共享，也可在设置中撤回同意。"],
-    "mobile.status":["Submitted to App Store review · Not yet publicly available", "已提交 App Store 审核 · 尚未正式上架"],
+    "mobile.status":["Available on the App Store · iOS / iPadOS 16.4+", "已在 App Store 上架 · iOS／iPadOS 16.4 及以上"],
+    "mobile.download":["Download on the App Store", "前往 App Store 下载"],
     "mobile.guide":["See the mobile setup guide", "查看手机端连接指南"],
     "mobile.note":["Requires a compatible computer, configured model service and device pairing. Keep the computer awake and online. Relay access requires iOS/iPadOS 17 or later; relay operators can observe connection metadata.", "需配合兼容电脑、已配置的模型服务和设备配对使用，电脑需保持唤醒并联网。中继连接要求 iOS／iPadOS 17 及以上；中继运营方可见连接元数据。"],
     "mobile.conversation":["Continue a conversation", "继续电脑上的会话"],
@@ -658,7 +662,7 @@ print(summary)   <b>// only this returns</b></pre></div>
     "mobile.image.conversation":["Cowork on iPhone showing a project planning conversation with sample content", "Cowork iPhone 界面：使用示例内容展示项目规划会话"],
     "mobile.image.approval":["Cowork on iPhone showing a request to save a sample project plan, with Allow once and Deny actions", "Cowork iPhone 界面：保存示例项目计划的批准请求，可允许一次或拒绝"],
     "meta.title":["Cowork — Local work. Your models. Encrypted mobile access.", "Cowork — 本地工作，自选模型，手机加密连接"],
-    "meta.description":["A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. iOS app submitted for review.", "Cowork 在自己的电脑上处理文件、代码和日常任务，工作内容不托管到 Cowork 云端。自选本地或云端模型，手机通过加密连接继续电脑上的工作。iOS 应用已提交审核。"],
+    "meta.description":["A desktop AI agent that keeps conversations and files on your computer. Choose local or cloud models and connect your iPhone or iPad over an encrypted connection. Available on the App Store for iPhone and iPad.", "Cowork 在自己的电脑上处理文件、代码和日常任务，工作内容不托管到 Cowork 云端。自选本地或云端模型，手机通过加密连接继续电脑上的工作。iPhone 和 iPad 版已在 App Store 上架。"],
   };
   var HTML_KEYS = {'hero.title':1};
   function apply(lang){
@@ -666,6 +670,7 @@ print(summary)   <b>// only this returns</b></pre></div>
     document.documentElement.lang = lang==='zh'?'zh-CN':'en';
     document.querySelectorAll('[data-t]').forEach(function(el){ var v = T[el.getAttribute('data-t')]; if(!v) return; if(HTML_KEYS[el.getAttribute('data-t')]) el.innerHTML = v[i]; else el.textContent = v[i]; });
     document.getElementById('lang').textContent = lang==='zh'?'EN':'中文';
+    CoworkAppStore.apply(lang);
     document.title = T['meta.title'][i];
     document.querySelector('meta[name="description"]').content = T['meta.description'][i];
     document.querySelector('meta[property="og:title"]').content = T['meta.title'][i];

@@ -9,6 +9,7 @@ const MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml
 const inline = rel => `data:${MIME[extname(rel)]};base64,${readFileSync(join(here, rel)).toString('base64')}`
 
 const html = readFileSync(join(here, 'index.html'), 'utf8')
+  .replace('<script src="app-store.js"></script>', () => `<script>${readFileSync(join(here, 'app-store.js'), 'utf8')}</script>`)
   .replace(/(src|href)="((?:assets|fonts)\/[^"]+)"/g, (_m, attr, rel) => `${attr}="${inline(rel)}"`)
   .replace(/url\((['"]?)((?:assets|fonts)\/[^'")]+)\1\)/g, (_m, _q, rel) => `url(${inline(rel)})`)
 writeFileSync(join(here, 'cowork-landing-preview.html'), html)

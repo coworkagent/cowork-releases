@@ -23,6 +23,13 @@ The automatically generated **Source code** archives contain this distribution w
 
 **Windows.** Run the setup program. The installers are not code-signed yet, so SmartScreen shows a warning on first run: choose *More info*, then *Run anyway*. Windows 10 or later.
 
+## iPhone and iPad
+
+[Get Cowork Agent on the App Store](https://apps.apple.com/us/app/cowork-agent/id6816690478).
+The companion app requires iOS or iPadOS 16.4 or later and connects to
+Cowork on your own computer. Keep the computer awake and online. Follow
+the [connection guide](https://coworkagent.top/mobile/help/) to pair.
+
 ## Updates
 
 Cowork checks this repository for new versions and installs them when you quit the app. You can turn this off in Settings.

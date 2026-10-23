@@ -1,6 +1,7 @@
 (() => {
-  const labels = {home:['Home','首页'],download:['Download','下载'],privacy:['Privacy policy','隐私政策'],support:['Support','支持与反馈'],help:['Get started','使用说明'],skip:['Skip to content','跳到正文'],resources:['Useful links','相关链接'],issues:['Report an issue on GitHub','在 GitHub 报告问题'],contact:['Contact support','联系支持']};
+  const labels = {appStore:['Download for iPhone & iPad','下载 iPhone／iPad 版'],home:['Home','首页'],download:['Download','下载'],privacy:['Privacy policy','隐私政策'],support:['Support','支持与反馈'],help:['Get started','使用说明'],skip:['Skip to content','跳到正文'],resources:['Useful links','相关链接'],issues:['Report an issue on GitHub','在 GitHub 报告问题'],contact:['Contact support','联系支持']};
   function apply(lang) {
+    CoworkAppStore.apply(lang);
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     document.querySelectorAll('[data-language]').forEach(el => { el.hidden = el.dataset.language !== lang; });
     document.querySelectorAll('[data-key]').forEach(el => { el.textContent = labels[el.dataset.key][lang === 'zh' ? 1 : 0]; });
