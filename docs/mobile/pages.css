@@ -18,7 +18,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 aside{padding-top:8px}
 aside a{display:block;margin-bottom:16px;color:var(--muted);text-decoration:none}
 aside a[aria-current]{color:var(--accent);font-weight:600}
-.kicker{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.kicker{font-size:12px;letter-spacing:.13em;text-transform:none;color:var(--accent);font-weight:600}
 h1{font:600 clamp(30px,4vw,44px)/1.25 Sora,system-ui;margin:14px 0 20px;letter-spacing:-.025em}
 .lead{font-size:19px;color:var(--muted);margin:0 0 12px}
 .date{font-size:13px;color:var(--muted);margin-bottom:42px}
