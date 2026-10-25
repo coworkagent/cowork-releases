@@ -1,2 +1,5 @@
 # 远程组件仅用于站点分发，不进入源码归档。
 /docs/remote export-ignore
+# 第三方许可原文与发行包保持逐字节一致，不重排上游空白。
+/docs/remote/0.0.20/**/THIRD_PARTY_NOTICES.txt -whitespace
+/docs/remote/0.0.20/**/RUST-LIBRARY-NOTICES.html -whitespace
