@@ -34,7 +34,7 @@
 <div class="kicker">Cowork · iPhone &amp; iPad</div>
 <h1>Privacy policy</h1>
 <p class="lead">How Cowork handles your information, and how desktop Cowork and this website fit in.</p>
-<p class="date">Effective October 7, 2026</p>
+<p class="date">Effective October 31, 2026</p>
 <section>
 <h2>Scope and contact</h2>
 <p>This policy covers the Cowork iPhone and iPad app, maintained by the Cowork project. Desktop and website processing is described separately below. For privacy questions or requests, use our support page.</p>
@@ -52,6 +52,11 @@
 <p>The app keeps pairing credentials, computer trust information and records needed to reconcile pending actions in device-only secure storage. Earlier builds also keep drafts there. Starting with build 39, complete drafts are encrypted in the app’s private document files, with their key and file pointers in device-only secure storage. Existing drafts are migrated only after the encrypted copy is saved. Drafts are not subject to the shared cache’s expiry or eviction policy. Language preferences are also saved locally. Before build 38, received session content is held in memory for display. Starting with build 38, the app also caches loaded conversation text, images, attachments and workspace file previews on this device. The shared cache is encrypted with a key held in device-only secure storage, limited to 2 GiB (2,147,483,648 bytes), and expires 60 days after each entry is written. Expired entries are removed when the app next reads or maintains the cache; cleanup cannot run while the app is inactive. Capacity limits can remove older entries sooner; iOS can also purge this cache. Only content already loaded is cached, within the app’s existing file-size and preview limits. Reopening a conversation first displays eligible cached history and then synchronizes current content. Cached data remains scoped to its paired computer and current access; opening attachments and workspace files checks current authorization and file metadata. Files you explicitly preview, export or share can create local temporary copies. Before build 39, the app keeps at most three shared temporary files. Starting with build 39, there is no cumulative file-count ceiling, and identical exports reuse an existing file. Each file remains limited to 10 MiB; use the app’s clear control to remove temporary exports. Copies saved to another app or Files are controlled by you and that destination.</p>
 </section>
 <section>
+<h2>Private capture, dictation and Read Aloud</h2>
+<p>Version 0.2.0 adds a Share extension. When you choose Cowork in another app’s share sheet, the selected text, links or supported files are encrypted into a local inbox shared only with the Cowork app. The private decryption key stays in device-only Keychain storage. Sharing to this inbox does not automatically send content to a computer or model service; open Cowork and choose what to add and send. You can remove captured items in the app.</p>
+<p>Optional dictation asks for microphone and speech-recognition permission and requires on-device recognition for the selected language. If on-device recognition is unavailable, dictation is unavailable; the app does not fall back to server recognition. Audio is processed for the active dictation session without creating an audio recording file. Recognized text becomes an editable draft and follows the draft storage rules above; it is sent only when you choose to send the message. Read Aloud uses iOS speech synthesis after you select it. You can stop speech or dictation at any time.</p>
+</section>
+<section>
 <h2>Permissions you control</h2>
 <p>Local network access connects to your computer. Camera access scans pairing codes or takes a photo when you use those features. The photo and document pickers let you select attachments. You can decline or change permissions in iOS Settings; the related feature may then be unavailable. The app does not need your contacts, precise location or an advertising identifier.</p>
 </section>
@@ -59,6 +64,10 @@
 <h2>Optional task notifications</h2>
 <p>When you enable notifications for a paired computer and allow them in iOS, the app sends its native Apple push token, language and push environment to that computer. The computer stores the registration using system-protected encryption. Delivery uses the relay you configured and Apple Push Notification service. The relay and Apple receive the token, generic event type, language and opaque routing identifiers needed to open the relevant conversation; notification payloads contain no conversation text or files. Cowork does not use Expo Push Service.</p>
 <p>Registrations are limited to the current device access grant and expire after seven days unless renewed while connected. You can turn notifications off for a computer while connected, or revoke the mobile device from desktop Cowork. Removing a pairing only on the phone does not revoke a registration already held by the computer. You can also disable alerts in iOS Settings. Delivery is best effort and subject to Apple and device settings.</p>
+</section>
+<section>
+<h2>Optional Live Activities</h2>
+<p>Version 0.2.0 can show generic task status in an iOS Live Activity when you enable it. The activity does not display conversation text, file contents or computer paths. Background updates have a separate opt-in and require a compatible paired computer and configured relay. When enabled, the app registers the activity’s Apple push token and opaque task-routing identifiers with the paired computer. The configured relay and Apple receive the token and generic status needed to deliver updates. These updates do not contain conversation text or files. You can disable Live Activities and background updates in the app; availability and delivery also depend on iOS settings. Enabling the mobile option does not configure or deploy a relay.</p>
 </section>
 <section>
 <h2>Analytics, diagnostics and support</h2>
@@ -81,7 +90,7 @@
 <div class="kicker">Cowork · iPhone &amp; iPad</div>
 <h1>隐私政策</h1>
 <p class="lead">说明 Cowork 如何处理信息，以及桌面版 Cowork 和本网站涉及的数据。</p>
-<p class="date">生效日期：2026 年 10 月 7 日</p>
+<p class="date">生效日期：2026 年 10 月 31 日</p>
 <section>
 <h2>适用范围与联系</h2>
 <p>本政策适用于 Cowork 项目维护的 iPhone 和 iPad 应用 Cowork。下文单独说明桌面端与网站的数据处理。如需咨询隐私或提出请求，请通过支持页面联系我们。</p>
@@ -99,6 +108,11 @@
 <p>App 将配对凭据、电脑信任信息及核对待处理操作所需的记录保存在仅限本设备的安全存储中。早期版本也将草稿保存在其中。从 build 39 起，完整草稿加密保存在 App 私有文档文件中，密钥和文件指针保存在仅限本设备的安全存储中。只有新密文保存成功后才迁移旧草稿。草稿不受共享缓存的到期或淘汰策略影响。语言偏好也保存在本地。build 38 之前，接收的会话内容保留在内存中用于显示。从 build 38 起，App 还会在本设备缓存已加载的聊天文字、图片、附件和工作区文件预览。它们共用一个加密缓存，密钥保存在仅限本设备的安全存储中，总容量上限为 2 GiB（2,147,483,648 字节），每项自写入起 60 天到期。过期条目会在 App 下次读取或维护缓存时清理；App 未运行时无法执行清理。达到容量上限时可能提前清理较旧条目，iOS 也可能清理缓存。仅缓存已经加载的内容，并仍受 App 现有文件大小与预览限制。再次进入会话时先显示符合条件的缓存历史，再同步最新内容。缓存按配对电脑及当前访问权限隔离；打开附件和工作区文件时会检查当前授权及文件信息。主动预览、导出或分享文件时可能产生本地临时副本。build 39 之前，App 最多保留三个分享临时文件。从 build 39 起不再限制累计文件数量，相同内容的导出会复用现有文件。每个文件仍不超过 10 MiB，可使用 App 中的清除功能删除临时导出文件。保存到其他 App 或“文件”的副本由你和相应应用管理。</p>
 </section>
 <section>
+<h2>私密收集、听写与朗读</h2>
+<p>0.2.0 版本新增系统分享扩展。在其他 App 的分享菜单中选择 Cowork 后，所选文字、链接或支持的文件会加密保存到仅由 Cowork 主应用及其扩展共用的本机收集箱；解密私钥保存在仅限本设备的钥匙串中。分享到收集箱不会自动将内容发送给电脑或模型服务；你需要打开 Cowork，选择加入会话并发送的内容。可以在 App 内删除收集项目。</p>
+<p>可选的听写需要麦克风和语音识别权限，并要求所选语言支持设备端识别。不支持设备端识别时，听写不可用，App 不会改用服务器识别。音频只用于当前听写过程，App 不创建录音文件。识别文字进入可编辑草稿，按上文的草稿规则保存，仅在你主动发送消息时发出。朗读在你主动选择后使用 iOS 语音合成；你可以随时停止朗读或听写。</p>
+</section>
+<section>
 <h2>你可以控制的权限</h2>
 <p>本地网络权限用于连接电脑。使用扫码或拍照功能时，相机权限用于读取配对码或拍摄照片。照片与文档选择器让你选择附件。你可以拒绝权限或在 iOS 设置中修改权限，相应功能可能因此无法使用。App 不需要通讯录、精确位置或广告标识符。</p>
 </section>
@@ -106,6 +120,10 @@
 <h2>可选的任务通知</h2>
 <p>为已配对电脑启用通知并允许 iOS 通知权限后，App 会将原生 Apple 推送令牌、语言和推送环境发送给该电脑。电脑使用系统保护的加密方式保存登记。通知通过你配置的中继及 Apple 推送通知服务发送。中继与 Apple 会接收令牌、通用事件类型、语言，以及用于打开对应会话的不透明路由标识；通知载荷不包含会话正文或文件。Cowork 不使用 Expo Push Service。</p>
 <p>通知登记绑定当前设备访问授权，七天后失效，连接期间可以续期。你可以在连接时关闭某台电脑的通知，或在桌面 Cowork 撤销移动设备。仅在手机移除配对不会撤销电脑已保存的通知登记。你也可以在 iOS 设置中关闭提醒。通知为尽力投递，实际展示受 Apple 与设备设置影响。</p>
+</section>
+<section>
+<h2>可选的实时活动</h2>
+<p>0.2.0 版本可在你启用后通过 iOS 实时活动显示通用任务状态，不展示会话正文、文件内容或电脑路径。后台更新有独立开关，需要兼容的已配对电脑及已配置的中继。启用后，App 向已配对电脑登记活动的 Apple 推送令牌及不透明任务路由标识；配置的中继和 Apple 接收投递所需的令牌与通用状态，更新不包含会话正文或文件。可以在 App 内关闭实时活动和后台更新；是否可用及能否送达也取决于 iOS 设置。启用手机端选项不会自动配置或部署中继。</p>
 </section>
 <section>
 <h2>统计、诊断与支持</h2>
