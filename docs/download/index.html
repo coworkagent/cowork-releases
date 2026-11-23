@@ -424,8 +424,8 @@
   function fromAssets(version, assets){
     var builds = {};
     assets.forEach(function(a){
-      var m = /^cowork-[\d.]+-(mac)-(arm64|x64)\.dmg$/.exec(a.name) || /^cowork-[\d.]+-(win)-(arm64|x64)-setup\.exe$/.exec(a.name);
-      if(m) builds[m[1] + '-' + m[2]] = { name:a.name, size:a.size, url:a.url };
+      var m = /^cowork-(\d+\.\d+\.\d+)-(mac)-(arm64|x64)\.dmg$/.exec(a.name) || /^cowork-(\d+\.\d+\.\d+)-(win)-(arm64|x64)-setup\.exe$/.exec(a.name);
+      if(m) builds[m[2] + '-' + m[3]] = { name:a.name, size:a.size, url:a.url, version:m[1] };
     });
     return Object.keys(builds).length ? { version:version, builds:builds } : null;
   }
@@ -477,7 +477,7 @@
       primary.href = mine ? mine.url : RELEASES + '/latest';
       if(release){
         meta.innerHTML = '';
-        [t('arch.' + key), t('meta.version', { v:release.version }), mine ? mb(mine.size) : ''].filter(Boolean).forEach(function(text, i){
+        [t('arch.' + key), t('meta.version', { v:mine ? mine.version : release.version }), mine ? mb(mine.size) : ''].filter(Boolean).forEach(function(text, i){
           var el = document.createElement(i === 0 ? 'b' : 'span'); el.textContent = text; meta.appendChild(el);
         });
       }
